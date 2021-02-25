@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from 'src/styles/globalStyles';
 import { THEMES, LIGHT, DARK } from 'src/styles/themes';
-
-const BASE_CLASS_NAME = 'App';
+import PolySynth from 'src/components/PolySynth';
 
 const App = (props) => {
     const [theme, setTheme] = useState(DARK);
@@ -12,10 +11,7 @@ const App = (props) => {
     return (
         <ThemeProvider theme={THEMES[theme]}>
             <GlobalStyles />
-
-            <div className={BASE_CLASS_NAME}>
-                Hello, World!
-            </div>
+            <PolySynth />
         </ThemeProvider>
     );
 };
