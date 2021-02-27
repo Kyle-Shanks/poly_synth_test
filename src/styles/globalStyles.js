@@ -65,11 +65,12 @@ export const GlobalStyles = createGlobalStyle`
     * {
         box-sizing: border-box;
         transition: 0.25s cubic-bezier(0.5, 0, 0.2, 1);
+        user-select: none;
     }
 
     body {
         background-color: ${({ theme }) => theme.background};
-        color: ${({ theme }) => theme.textPrimary};
+        color: ${({ theme }) => theme.strong};
         ${typographyStyles}
     }
 

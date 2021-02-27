@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as Nodes from 'src/nodes';
 import MonoSynth from 'src/components/MonoSynth';
+import Knob from 'src/components/Knob';
 import { getNoteInfo } from 'src/util/util';
 
 const BASE_CLASS_NAME = 'PolySynth';
@@ -12,14 +13,23 @@ const synthArr = Array(polyphony).fill(0).map(_ => new MonoSynth(AC));
 const synthMix = new Nodes.Compressor(AC);
 const masterVolume = new Nodes.Gain(AC);
 
+const analyserNode = AC.createAnalyser();
+analyserNode.fftSize = 2048;
+
 let synthPos = 0;
 const incrementSynthPos = () => synthPos = (synthPos + 1) % synthArr.length;
 
+// const gainEnv = {
+//     a: 0.001,
+//     d: 0.001,
+//     s: 1,
+//     r: 0.001,
+// };
 const gainEnv = {
-    a: 0.001,
-    d: 0.001,
+    a: 0.01,
+    d: 0.01,
     s: 1,
-    r: 0.001,
+    r: 0.01,
 };
 
 const filterEnv = {
@@ -31,9 +41,14 @@ const filterEnv = {
 
 const portamento = 0;
 
-const PolySynth = ({ className }) => {
+const PolySynth = ({ className, theme }) => {
+    const scopeCtx = useRef();
+    const spectrumCtx = useRef();
     const [synthActive, setSynthActive] = useState(false);
     const [octaveMod, setOctaveMod] = useState(3);
+
+    const [knobValue, setKnobValue] = useState(0.2);
+    const [knobBValue, setKnobBValue] = useState(0.2);
 
     const octaveUp = () => { if (octaveMod < 6) setOctaveMod(octaveMod + 1) };
     const octaveDown = () => { if (octaveMod > 0) setOctaveMod(octaveMod - 1) };
@@ -46,6 +61,8 @@ const PolySynth = ({ className }) => {
 
     const initSynth = () => {
         masterVolume.connect(AC.destination);
+
+        synthMix.connect(analyserNode);
         synthMix.connect(masterVolume.getNode());
         synthArr.forEach(synth => synth.connect(synthMix.getNode()));
 
@@ -55,6 +72,7 @@ const PolySynth = ({ className }) => {
     const synthNoteOn = (synth, note) => synth.noteOn(note, { gainEnv, filterEnv, portamento });
     const synthNoteOff = (synth) => synth.noteOff({ gainEnv, filterEnv });
 
+    // Function to delegate notes to each of the synths
     const noteOn = (note) => {
         if (!synthArr[synthPos].currentNote) {
             synthNoteOn(synthArr[synthPos], note);
@@ -72,8 +90,8 @@ const PolySynth = ({ className }) => {
         incrementSynthPos();
     };
     const noteOff = (note) => {
-        const targetSynth = synthArr.find(synth => synth.currentNote === note.note);
-        if (targetSynth) synthNoteOff(targetSynth);
+        const targetSynths = synthArr.filter(synth => synth.currentNote === note.note);
+        targetSynths.forEach(synth => synthNoteOff(synth));
     };
 
     // Keyboard listeners
@@ -105,7 +123,77 @@ const PolySynth = ({ className }) => {
         window.removeEventListener('keyup', keyupFunction);
     }
 
-    useEffect(initSynth, []);
+    // Analyser Functions
+    const startAnalyser = () => {
+        const scope = scopeCtx.current.getContext('2d');
+        const spec = spectrumCtx.current.getContext('2d');
+
+        scope.canvas.width = scope.canvas.clientWidth;
+        spec.canvas.width = spec.canvas.clientWidth;
+
+        const draw = () => {
+            drawSpectrum(analyserNode, spec);
+            drawScope(analyserNode, scope);
+            requestAnimationFrame(draw);
+        }
+        draw();
+    }
+    const drawSpectrum = (analyser, ctx) => {
+        const width = ctx.canvas.width;
+        const height = ctx.canvas.height;
+        const freqData = new Uint8Array(analyser.frequencyBinCount);
+        const scaling = height / 260;
+
+        analyser.getByteFrequencyData(freqData);
+
+        ctx.fillStyle = theme.background;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = theme.strong;
+        ctx.beginPath();
+
+        for (let x = 0; x < width; x++) {
+            ctx.lineTo(x, height - freqData[x] * scaling);
+        }
+
+        ctx.stroke();
+    }
+    const drawScope = (analyser, ctx) => {
+        const width = ctx.canvas.width;
+        const height = ctx.canvas.height;
+        const timeData = new Uint8Array(analyser.frequencyBinCount);
+        const scaling = height / 256;
+        let risingEdge = 0;
+        const edgeThreshold = 0.5;
+
+        analyser.getByteTimeDomainData(timeData);
+
+        ctx.fillStyle = theme.background
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = theme.strong;
+        ctx.beginPath();
+
+        // No buffer overrun protection
+        while (timeData[risingEdge++] - 128 > 0 && risingEdge <= width);
+        if (risingEdge >= width) risingEdge = 0;
+
+        while (timeData[risingEdge++] - 128 < edgeThreshold && risingEdge <= width);
+        if (risingEdge >= width) risingEdge = 0;
+
+        for (let x = risingEdge; x < timeData.length && x - risingEdge < width; x++) {
+            ctx.lineTo(x - risingEdge, height * 1 - timeData[x] * scaling);
+        }
+
+        ctx.stroke();
+    }
+
+    useEffect(() => {
+        initSynth();
+        // startAnalyser();
+    }, []);
 
     // Needed to avoid stale hook state
     useEffect(() => {
@@ -116,7 +204,24 @@ const PolySynth = ({ className }) => {
     return (
         <div className={`${BASE_CLASS_NAME} ${className}`.trim()}>
             Hello, World!
+            <canvas ref={scopeCtx} id="scope" />
+            <canvas ref={spectrumCtx} id="spectrum" />
+
+            <br/>
+
+            <Knob
+                label="Test knob"
+                value={knobValue}
+                onUpdate={(val) => setKnobValue(val)}
+            />
+            <Knob
+                label="Test knob B"
+                type="B"
+                value={knobBValue}
+                onUpdate={(val) => setKnobBValue(val)}
+            />
         </div>
+
     );
 };
 
