@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import * as Nodes from 'src/nodes';
 import MonoSynth from 'src/components/MonoSynth';
 import Knob from 'src/components/Knob';
-import { getNoteInfo } from 'src/util/util';
+import Select from 'src/components/Select';
+import { getNoteInfo, WAVEFORM } from 'src/util/util';
 
 const BASE_CLASS_NAME = 'PolySynth';
 
@@ -19,17 +20,11 @@ analyserNode.fftSize = 2048;
 let synthPos = 0;
 const incrementSynthPos = () => synthPos = (synthPos + 1) % synthArr.length;
 
-// const gainEnv = {
-//     a: 0.001,
-//     d: 0.001,
-//     s: 1,
-//     r: 0.001,
-// };
 const gainEnv = {
-    a: 0.01,
-    d: 0.01,
+    a: 0.001,
+    d: 0.001,
     s: 1,
-    r: 0.01,
+    r: 0.001,
 };
 
 const filterEnv = {
@@ -39,7 +34,7 @@ const filterEnv = {
     amount: 0,
 }
 
-const portamento = 0;
+let portamento = 0;
 
 const PolySynth = ({ className, theme }) => {
     const scopeCtx = useRef();
@@ -47,6 +42,7 @@ const PolySynth = ({ className, theme }) => {
     const [synthActive, setSynthActive] = useState(false);
     const [octaveMod, setOctaveMod] = useState(3);
 
+    const [selectValue, setSelectValue] = useState('square');
     const [knobValue, setKnobValue] = useState(0.2);
     const [knobBValue, setKnobBValue] = useState(0.2);
 
@@ -210,15 +206,29 @@ const PolySynth = ({ className, theme }) => {
             <br/>
 
             <Knob
-                label="Test knob"
+                label="Cutoff"
                 value={knobValue}
-                onUpdate={(val) => setKnobValue(val)}
+                modifier={11000}
+                isRounded
+                onUpdate={(val) => {
+                    setKnobValue(val);
+                    synthArr.forEach(synth => synth.setFilterFreq(val));
+                }}
             />
             <Knob
-                label="Test knob B"
+                label="Test knob"
                 type="B"
                 value={knobBValue}
                 onUpdate={(val) => setKnobBValue(val)}
+            />
+            <Select
+                label="Waveform"
+                value={selectValue}
+                onUpdate={(val) => {
+                    setSelectValue(val);
+                    synthArr.forEach(synth => synth.setWaveform(val));
+                }}
+                options={WAVEFORM}
             />
         </div>
 

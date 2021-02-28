@@ -3,6 +3,7 @@ class Filter {
         this.AC = AC;
         this.TYPES = ['lowpass', 'highpass', 'bandpass', 'notch', 'peaking', 'lowshelf', 'highshelf'];
         this.maxFreq = 11000;
+        this.maxQ = 100;
 
         this.node = this.AC.createBiquadFilter();
 

@@ -12,7 +12,6 @@ import {
 } from './Knob.styled';
 
 const BASE_CLASS_NAME = 'Knob';
-
 const maxRotation = 132;
 const typeInfo = {
     A: {
@@ -86,7 +85,7 @@ const Knob = ({ isRounded, label, modifier, offset, onUpdate, type, value }) => 
                 onMouseDown={handleMouseDown}
             >
                 <KnobSvg className={`${BASE_CLASS_NAME}__svg`} viewBox="0 0 100 100">
-                    <BackgroundMeter d={"M20,76 A 40 40 0 1 1 80 76"} />
+                    <BackgroundMeter d="M20,76 A 40 40 0 1 1 80 76" />
                     <ActiveMeter
                         d={typeInfo[type].path}
                         strokeDasharray={typeInfo[type].dashLength}

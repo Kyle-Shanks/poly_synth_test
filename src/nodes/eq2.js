@@ -5,12 +5,12 @@ class EQ2 {
 
         // Low
         this.low = this.AC.createBiquadFilter();
-        this.low.type = "lowshelf";
+        this.low.type = 'lowshelf';
         this.low.frequency.value = 320.0;
         this.low.gain.value = 0.0;
         // High
         this.high = this.AC.createBiquadFilter();
-        this.high.type = "highshelf";
+        this.high.type = 'highshelf';
         this.high.frequency.value = 3200.0;
         this.high.gain.value = 0.0;
 

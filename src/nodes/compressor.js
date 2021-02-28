@@ -1,5 +1,3 @@
-import { ThemeProvider } from "styled-components";
-
 class Compressor {
     constructor(AC) {
         this.AC = AC;

@@ -21,6 +21,7 @@ class MonoSynth {
 
         this.volume.setGain(0.2);
         this.gain.setGain(0);
+        this.osc.setType('square');
         this.osc.start();
     }
 
@@ -37,8 +38,10 @@ class MonoSynth {
     }
 
     // Parameter setters
-    setVolume = (val) => { this.volume.setGain(clamp(val, 0, 1)); }
-    setWaveform = (type) => { this.osc.setType(type); }
+    setVolume = (val) => this.volume.setGain(clamp(val, 0, 1));
+    setWaveform = (type) => this.osc.setType(type);
+    setFilterFreq = (val) => this.filter.setFreq(val);
+    setFilterQ = (val) => this.filter.setQ(val);
 
     // Note trigger methods
     noteOn = (noteInfo, synthProps) => {
