@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { SPACING, borderWidthM, borderRadiusM } from 'src/styles/constants';
 import {
     relaBlock,
     relaInline,
@@ -9,8 +10,8 @@ import {
 export const ComponentContainer = styled.div`
     ${relaInline}
     width: 5rem;
-    padding: 0.25rem 0;
-    margin: 0 0.5rem;
+    padding: ${SPACING.xs} 0 0;
+    margin: 0 ${SPACING.s};
     vertical-align: text-top;
 
     &:hover ${Label}, &:active ${Label} {
@@ -25,8 +26,7 @@ export const ComponentContainer = styled.div`
 
 export const Label = styled.h4`
     ${relaBlock}
-    margin: 0.5rem auto;
-    padding-bottom: 1px;
+    margin: ${SPACING.s} auto;
     text-align: center;
     font-size: 13px;
     color: ${({ theme }) => theme.strong};
@@ -41,17 +41,17 @@ export const InputContainer = styled.div`
     ${relaBlock}
     width: 3.25rem;
     margin: 0 auto;
-    padding-top: 0.5rem;
+    padding-top: ${SPACING.s};
 `;
 
 export const Input = styled.div`
     ${relaBlock}
-    border-radius: 0.5rem;
+    border-radius: ${SPACING.s};
     overflow: hidden;
-    border: 0.125rem solid ${({ theme, isDropdownOpen }) => isDropdownOpen ? theme.strong : theme.mid};
+    border: ${borderWidthM} solid ${({ theme, isDropdownOpen }) => isDropdownOpen ? theme.strong : theme.mid};
 
     &:hover {
-        border: 0.125rem solid ${({ theme }) => theme.strong};
+        border: ${borderWidthM} solid ${({ theme }) => theme.strong};
     }
 
     & > svg {
@@ -73,18 +73,18 @@ export const Input = styled.div`
 export const Dropdown = styled.div`
     ${vertCenter}
     z-index: 100;
-    width: 100px;
-    padding: 0.125rem;
-    left: calc(100% + 0.25rem);
+    width: 104px;
+    padding: ${SPACING.xs};
+    left: calc(100% + ${SPACING.s});
     background-color: ${({ theme }) => theme.background};
     box-shadow: 0 2px 20px 1px rgba(0,0,0,0.4);
-    border-radius: 0.333rem;
+    border-radius: ${borderRadiusM};
     overflow: auto;
 
     // Toggle Styles
     ${props => props.isOpen
         ? `opacity: 1; pointer-events: all; transform: translate(0, -50%);`
-        : `opacity: 0; pointer-events: none; transform: translate(-1rem, -50%);`
+        : `opacity: 0; pointer-events: none; transform: translate(-${SPACING.m}, -50%);`
     }
 `;
 
@@ -97,9 +97,9 @@ export const DropdownSvg = styled.svg`
     stroke-linecap: round;
     transition: 0s;
     stroke-linejoin: round;
-    stroke: ${({ theme, selected }) => selected ? theme.pop : theme.mid};
+    stroke: ${({ theme, selected }) => selected ? theme.strong : theme.mid};
 
     &:hover {
-        stroke: ${({ theme }) => theme.pop};
+        stroke: ${({ theme }) => theme.strong};
     }
 `;

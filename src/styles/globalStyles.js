@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import { defaultTransition } from 'src/styles/constants';
 
 const resetStyles = `
     /* http://meyerweb.com/eric/tools/css/reset/
@@ -64,7 +65,7 @@ export const GlobalStyles = createGlobalStyle`
 
     * {
         box-sizing: border-box;
-        transition: 0.25s cubic-bezier(0.5, 0, 0.2, 1);
+        transition: ${defaultTransition};
         user-select: none;
     }
 

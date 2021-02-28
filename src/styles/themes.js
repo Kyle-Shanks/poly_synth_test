@@ -1,5 +1,6 @@
 import { COLORS, SHADES } from 'src/styles/palette';
 
+export const BRAUN = 'braun';
 export const LIGHT = 'light';
 export const DARK = 'dark';
 export const BLUE = 'blue';
@@ -8,12 +9,19 @@ export const MONO_DARK = 'monoDark'
 export const MONO_BLUE = 'monoBlue';
 
 export const THEMES = {
+    [BRAUN]: {
+        background: '#fffbdb',
+        lite: '#ccc9b6',
+        mid: '#ccc9b6',
+        strong: '#3e3d3f',
+        pop: '#e3151a',
+    },
     [LIGHT]: {
         background: SHADES.white,
         lite: SHADES.grey20,
         mid: SHADES.grey20,
         strong: SHADES.grey70,
-        pop: COLORS.red,
+        pop: COLORS.orange,
     },
     [DARK]: {
         background: SHADES.grey80,

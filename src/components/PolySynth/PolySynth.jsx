@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as Nodes from 'src/nodes';
 import MonoSynth from 'src/components/MonoSynth';
+import Effect from 'src/components/Effect';
 import Knob from 'src/components/Knob';
 import Select from 'src/components/Select';
 import presetData from 'src/util/presetData';
@@ -266,34 +267,36 @@ const PolySynth = ({ className, theme }) => {
             <canvas ref={spectrumCtx} id="spectrum" />
             <br/>
 
-            <Knob
-                label="Cutoff"
-                value={filterFreq}
-                modifier={11000}
-                isRounded
-                onUpdate={(val) => {
-                    setFilterFreq(val);
-                    synthArr.forEach(synth => synth.setFilterFreq(val));
-                }}
-            />
-            <Select
-                label="Waveform"
-                value={vcoType}
-                onUpdate={(val) => {
-                    setVcoType(val);
-                    synthArr.forEach(synth => synth.setWaveform(val));
-                }}
-                options={WAVEFORM}
-            />
-            <Select
-                label="Filter Type"
-                value={filterType}
-                onUpdate={(val) => {
-                    setFilterType(val);
-                    synthArr.forEach(synth => synth.setFilterType(val));
-                }}
-                options={FILTER}
-            />
+            <Effect label="Testing" columns={3}>
+                <Knob
+                    label="Cutoff"
+                    value={filterFreq}
+                    modifier={11000}
+                    isRounded
+                    onUpdate={(val) => {
+                        setFilterFreq(val);
+                        synthArr.forEach(synth => synth.setFilterFreq(val));
+                    }}
+                />
+                <Select
+                    label="Waveform"
+                    value={vcoType}
+                    onUpdate={(val) => {
+                        setVcoType(val);
+                        synthArr.forEach(synth => synth.setWaveform(val));
+                    }}
+                    options={WAVEFORM}
+                />
+                <Select
+                    label="Filter"
+                    value={filterType}
+                    onUpdate={(val) => {
+                        setFilterType(val);
+                        synthArr.forEach(synth => synth.setFilterType(val));
+                    }}
+                    options={FILTER}
+                />
+            </Effect>
         </div>
 
     );

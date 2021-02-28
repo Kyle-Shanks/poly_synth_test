@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { SPACING, borderWidthM } from 'src/styles/constants';
 import {
     relaBlock,
     relaInline,
@@ -9,7 +10,7 @@ import {
 
 export const ComponentContainer = styled.div`
     ${relaInline}
-    margin: 0 0.5rem 0.5rem;
+    margin: 0 ${SPACING.s};
     vertical-align: top;
 
     &:hover ${Label}, &:active ${Label} {
@@ -25,7 +26,7 @@ export const ComponentContainer = styled.div`
 export const Label = styled.h2`
     ${relaBlock}
     max-width: 5rem;
-    margin: -0.5rem auto 0.5rem;
+    margin: -${SPACING.s} auto ${SPACING.s};
     text-align: center;
     font-size: 13px;
     color: ${({ theme }) => theme.strong};
@@ -60,7 +61,7 @@ export const KnobDial = styled.div`
     ${absCenter}
     height: 3rem;
     width: 3rem;
-    border: 0.125rem solid ${({ theme }) => theme.strong};
+    border: ${borderWidthM} solid ${({ theme }) => theme.strong};
     border-radius: 100%;
     text-align: center;
     transition: 0s;
@@ -69,7 +70,7 @@ export const KnobDial = styled.div`
         content: "";
         position: absolute;
         height: 0.75rem;
-        width: 0.125rem;
+        width: ${borderWidthM};
         background-color: ${({ theme }) => theme.strong};
     }
 `;
