@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ComponentContainer, GridContainer, Bolt, Label } from './Effect.styled';
+import { ComponentContainer, GridContainer, Bolt, Label } from './Module.styled';
 
-const BASE_CLASS_NAME = 'Effect';
+const BASE_CLASS_NAME = 'Module';
 
-const Effect = ({ className, children, columns, gap, label, rows }) => {
+const Module = ({ className, children, columns, gap, label, rows }) => {
 
     return (
         <ComponentContainer className={`${BASE_CLASS_NAME} ${className}`.trim()}>
@@ -12,15 +12,20 @@ const Effect = ({ className, children, columns, gap, label, rows }) => {
             <Bolt />
             <Bolt />
             <Bolt />
-            <Label>{label}</Label>
-            <GridContainer columns={columns} rows={rows} gap={gap}>
+            <Label className={`${BASE_CLASS_NAME}__Label`}>{label}</Label>
+            <GridContainer
+                className={`${BASE_CLASS_NAME}__GridContainer`}
+                columns={columns}
+                rows={rows}
+                gap={gap}
+            >
                 {children}
             </GridContainer>
         </ComponentContainer>
     );
 };
 
-Effect.propTypes = {
+Module.propTypes = {
     className: PropTypes.string,
     children: PropTypes.node,
     label: PropTypes.string.isRequired,
@@ -30,7 +35,7 @@ Effect.propTypes = {
     gap: PropTypes.string,
 };
 
-Effect.defaultProps = {
+Module.defaultProps = {
     className: '',
     children: null,
     columns: 1,
@@ -38,4 +43,4 @@ Effect.defaultProps = {
     gap: '0rem',
 };
 
-export default Effect;
+export default Module;

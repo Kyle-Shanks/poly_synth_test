@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as Nodes from 'src/nodes';
 import MonoSynth from 'src/components/MonoSynth';
-import Effect from 'src/components/Effect';
+import Module from 'src/components/Module';
 import Knob from 'src/components/Knob';
 import Select from 'src/components/Select';
 import presetData from 'src/util/presetData';
@@ -267,7 +267,7 @@ const PolySynth = ({ className, theme }) => {
             <canvas ref={spectrumCtx} id="spectrum" />
             <br/>
 
-            <Effect label="Testing" columns={3}>
+            <Module label="Testing" columns={3}>
                 <Knob
                     label="Cutoff"
                     value={filterFreq}
@@ -296,7 +296,7 @@ const PolySynth = ({ className, theme }) => {
                     }}
                     options={FILTER}
                 />
-            </Effect>
+            </Module>
         </div>
 
     );
