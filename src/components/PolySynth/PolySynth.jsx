@@ -4,71 +4,109 @@ import * as Nodes from 'src/nodes';
 import MonoSynth from 'src/components/MonoSynth';
 import Knob from 'src/components/Knob';
 import Select from 'src/components/Select';
-import { getNoteInfo, WAVEFORM } from 'src/util/util';
+import presetData from 'src/util/presetData';
+import { getNoteInfo, WAVEFORM, FILTER } from 'src/util/util';
 
 const BASE_CLASS_NAME = 'PolySynth';
 
 const AC = new AudioContext();
 const polyphony = 8;
 const synthArr = Array(polyphony).fill(0).map(_ => new MonoSynth(AC));
+let synthPos = 0;
+const incrementSynthPos = () => synthPos = (synthPos + 1) % synthArr.length;
+
 const synthMix = new Nodes.Compressor(AC);
-const masterVolume = new Nodes.Gain(AC);
+const masterGain = new Nodes.Gain(AC);
 
 const analyserNode = AC.createAnalyser();
 analyserNode.fftSize = 2048;
 
-let synthPos = 0;
-const incrementSynthPos = () => synthPos = (synthPos + 1) % synthArr.length;
-
-const gainEnv = {
-    a: 0.001,
-    d: 0.001,
-    s: 1,
-    r: 0.001,
-};
-
-const filterEnv = {
-    a: 0.001,
-    d: 0.001,
-    r: 0.001,
-    amount: 0,
-}
-
-let portamento = 0;
-
 const PolySynth = ({ className, theme }) => {
     const scopeCtx = useRef();
     const spectrumCtx = useRef();
+
+    // Synth State
     const [synthActive, setSynthActive] = useState(false);
     const [octaveMod, setOctaveMod] = useState(3);
+    const [currentPreset, setCurrentPreset] = useState('- INIT -');
 
-    const [selectValue, setSelectValue] = useState('square');
-    const [knobValue, setKnobValue] = useState(0.2);
-    const [knobBValue, setKnobBValue] = useState(0.2);
+    // Preset State
+    const [masterVolume, setMasterVolume] = useState(0.75);
+    const [gainAttack, setGainAttack] = useState(0);
+    const [gainDecay, setGainDecay] = useState(0);
+    const [gainSustain, setGainSustain] = useState(1);
+    const [gainRelease, setGainRelease] = useState(0);
+    const [vcoType, setVcoType] = useState('sine');
+    const [filterType, setFilterType] = useState('lowpass');
+    const [filterFreq, setFilterFreq] = useState(6000);
+    const [filterQ, setFilterQ] = useState(0);
+    const [filterAttack, setFilterAttack] = useState(0);
+    const [filterDecay, setFilterDecay] = useState(0);
+    const [filterRelease, setFilterRelease] = useState(0);
+    const [filterEnvAmount, setFilterEnvAmount] = useState(0);
+    const [portamentoSpeed, setPortamentoSpeed] = useState(0);
 
     const octaveUp = () => { if (octaveMod < 6) setOctaveMod(octaveMod + 1) };
     const octaveDown = () => { if (octaveMod > 0) setOctaveMod(octaveMod - 1) };
 
     const activateSynth = () => {
         setSynthActive(true);
-        synthArr.forEach(synth => synth.init());
+        syncNodesToState();
         AC.resume();
     };
 
     const initSynth = () => {
-        masterVolume.connect(AC.destination);
+        masterGain.connect(AC.destination);
 
         synthMix.connect(analyserNode);
-        synthMix.connect(masterVolume.getNode());
-        synthArr.forEach(synth => synth.connect(synthMix.getNode()));
-
+        synthMix.connect(masterGain.getNode());
+        synthArr.forEach(synth => {
+            synth.connect(synthMix.getNode());
+            synth.init();
+        });
         synthMix.setRatio(20);
+
+        syncNodesToState();
     };
 
-    const synthNoteOn = (synth, note) => synth.noteOn(note, { gainEnv, filterEnv, portamento });
-    const synthNoteOff = (synth) => synth.noteOff({ gainEnv, filterEnv });
+    // Sync node values to the current state
+    const syncNodesToState = () => {
+        masterGain.setGain(masterVolume);
 
-    // Function to delegate notes to each of the synths
+        synthArr.forEach(synth => {
+            synth.setWaveform(vcoType);
+            synth.setFilterFreq(filterFreq);
+            synth.setFilterType(filterType)
+            synth.setFilterQ(filterQ);
+        });
+    }
+
+    const getGainEnv = () => ({
+        a: gainAttack,
+        d: gainDecay,
+        s: gainSustain,
+        r: gainRelease,
+    });
+    const getFilterEnv = () => ({
+        a: filterAttack,
+        d: filterDecay,
+        r: filterRelease,
+        amount: filterEnvAmount,
+    });
+
+    // Functions to pass envelope data to the synth
+    const synthNoteOn = (synth, note) => {
+        const gainEnv = getGainEnv();
+        const filterEnv = getFilterEnv();
+        synth.noteOn(note, { gainEnv, filterEnv, portamentoSpeed });
+    }
+    const synthNoteOff = (synth) => {
+        const gainEnv = getGainEnv();
+        const filterEnv = getFilterEnv();
+        synth.noteOff({ gainEnv, filterEnv });
+    }
+
+    // Function to delegate played notes to each of the synths
     const noteOn = (note) => {
         if (!synthArr[synthPos].currentNote) {
             synthNoteOn(synthArr[synthPos], note);
@@ -186,10 +224,34 @@ const PolySynth = ({ className, theme }) => {
         ctx.stroke();
     }
 
+    // Init
     useEffect(() => {
         initSynth();
+        setTimeout(syncNodesToState, 0);
         // startAnalyser();
     }, []);
+
+    // Load Preset
+    useEffect(() => {
+        const preset = presetData[currentPreset];
+
+        setMasterVolume(preset.masterVolume);
+        setGainAttack(preset.gainAttack);
+        setGainDecay(preset.gainDecay);
+        setGainSustain(preset.gainSustain);
+        setGainRelease(preset.gainRelease);
+        setVcoType(preset.vcoType);
+        setFilterType(preset.filterType);
+        setFilterFreq(preset.filterFreq);
+        setFilterQ(preset.filterQ);
+        setFilterAttack(preset.filterAttack);
+        setFilterDecay(preset.filterDecay);
+        setFilterRelease(preset.filterRelease);
+        setFilterEnvAmount(preset.filterEnvAmount);
+        setPortamentoSpeed(preset.portamentoSpeed);
+
+        setTimeout(syncNodesToState, 0);
+    }, [currentPreset]);
 
     // Needed to avoid stale hook state
     useEffect(() => {
@@ -202,33 +264,35 @@ const PolySynth = ({ className, theme }) => {
             Hello, World!
             <canvas ref={scopeCtx} id="scope" />
             <canvas ref={spectrumCtx} id="spectrum" />
-
             <br/>
 
             <Knob
                 label="Cutoff"
-                value={knobValue}
+                value={filterFreq}
                 modifier={11000}
                 isRounded
                 onUpdate={(val) => {
-                    setKnobValue(val);
+                    setFilterFreq(val);
                     synthArr.forEach(synth => synth.setFilterFreq(val));
                 }}
             />
-            <Knob
-                label="Test knob"
-                type="B"
-                value={knobBValue}
-                onUpdate={(val) => setKnobBValue(val)}
-            />
             <Select
                 label="Waveform"
-                value={selectValue}
+                value={vcoType}
                 onUpdate={(val) => {
-                    setSelectValue(val);
+                    setVcoType(val);
                     synthArr.forEach(synth => synth.setWaveform(val));
                 }}
                 options={WAVEFORM}
+            />
+            <Select
+                label="Filter Type"
+                value={filterType}
+                onUpdate={(val) => {
+                    setFilterType(val);
+                    synthArr.forEach(synth => synth.setFilterType(val));
+                }}
+                options={FILTER}
             />
         </div>
 

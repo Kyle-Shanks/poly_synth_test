@@ -11,6 +11,7 @@ export const ComponentContainer = styled.div`
     width: 5rem;
     padding: 0.25rem 0;
     margin: 0 0.5rem;
+    vertical-align: text-top;
 
     &:hover ${Label}, &:active ${Label} {
         & .label-text {
@@ -62,6 +63,10 @@ export const Input = styled.div`
         stroke-linecap: round;
         stroke-linejoin: round;
         stroke: ${({ theme }) => theme.pop};
+
+        & path {
+            transition: 0s;
+        }
     }
 `;
 

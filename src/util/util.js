@@ -40,7 +40,7 @@ const freqMap = {
 };
 
 // Gets the note info based on the key pressed and octaveMod
-export const getNoteInfo = (key, octaveMod) => {
+export const getNoteInfo = (key, octaveMod = 3) => {
     const noteInfo = noteMap[key];
     if (!noteInfo) return false;
 
