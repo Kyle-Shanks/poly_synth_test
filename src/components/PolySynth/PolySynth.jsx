@@ -262,7 +262,6 @@ const PolySynth = ({ className, theme }) => {
 
     return (
         <div className={`${BASE_CLASS_NAME} ${className}`.trim()}>
-            Hello, World!
             <canvas ref={scopeCtx} id="scope" />
             <canvas ref={spectrumCtx} id="spectrum" />
             <br/>

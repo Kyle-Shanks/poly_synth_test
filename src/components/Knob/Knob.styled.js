@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { SPACING, borderWidthM } from 'src/styles/constants';
+import { SPACING, borderWidthM, defaultTransition } from 'src/styles/constants';
 import {
     relaBlock,
     relaInline,
@@ -29,7 +29,10 @@ export const Label = styled.h2`
     margin: -${SPACING.s} auto ${SPACING.s};
     text-align: center;
     font-size: 13px;
-    color: ${({ theme }) => theme.strong};
+
+    & > * {
+        color: ${({ theme }) => theme.strong};
+    }
 
     & > .value-text {
         ${absFill}
@@ -47,7 +50,6 @@ export const KnobSvg = styled.svg`
     ${vertCenter}
     height: 5rem;
     width: 5rem;
-    transition: 0s;
     & path {
         fill: none;
         stroke-linecap: round;
@@ -64,7 +66,7 @@ export const KnobDial = styled.div`
     border: ${borderWidthM} solid ${({ theme }) => theme.strong};
     border-radius: 100%;
     text-align: center;
-    transition: 0s;
+    transition: 0s, border ${defaultTransition};
 
     &::after {
         content: "";

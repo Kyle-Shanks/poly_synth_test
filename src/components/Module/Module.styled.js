@@ -21,6 +21,7 @@ export const Label = styled.h4`
     position: absolute;
     top: 0;
     left: ${SPACING.ml};
+    color: ${({ theme }) => theme.strong};
     transform: translateY(-50%);
     padding: 0 ${SPACING.s} ${SPACING.xs};
     background-color: ${({theme}) => theme.background};

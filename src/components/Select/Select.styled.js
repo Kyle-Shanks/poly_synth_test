@@ -29,7 +29,9 @@ export const Label = styled.h4`
     margin: ${SPACING.s} auto;
     text-align: center;
     font-size: 13px;
-    color: ${({ theme }) => theme.strong};
+    & > * {
+        color: ${({ theme }) => theme.strong};
+    }
 
     & > .value-text {
         ${absFill}
