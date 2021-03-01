@@ -26,7 +26,7 @@ const masterDelay = new Nodes.Delay(AC);
 const masterReverb = new Nodes.Reverb(AC);
 const vibratoLFO = new Nodes.LFO(AC);
 const masterBitCrush = new Nodes.BitCrusher(AC);
-// const masterCompressor = new Nodes.Compressor(AC);
+const masterLimiter = new Nodes.Compressor(AC);
 const masterEQ2 = new Nodes.EQ2(AC);
 
 const analyserNode = AC.createAnalyser();
@@ -105,7 +105,12 @@ const PolySynth = ({ className, theme }) => {
         masterReverb.connect(masterFilter.getNode());
 
         masterFilter.connect(analyserNode);
-        masterFilter.connect(masterGain.getNode());
+        masterFilter.connect(masterLimiter.getNode());
+
+        masterLimiter.connect(masterGain.getNode());
+        masterLimiter.setThreshold(-6);
+        masterLimiter.setKnee(0);
+        masterLimiter.setRatio(20);
 
         masterGain.connect(AC.destination);
 
