@@ -20,7 +20,7 @@ class MonoSynth {
         this.gain.connect(this.filter.getNode());
         this.filter.connect(this.volume.getNode());
 
-        this.volume.setGain(0.5);
+        this.volume.setGain(0.2);
         this.gain.setGain(0);
         this.osc.start();
     }
@@ -36,6 +36,8 @@ class MonoSynth {
     clearTimeouts() {
         this.timeoutIds.forEach((id) => clearTimeout(id));
     }
+
+    getNode = () => this.osc.getNode();
 
     // Parameter setters
     setVolume = (val) => this.volume.setGain(clamp(val, 0, 1));

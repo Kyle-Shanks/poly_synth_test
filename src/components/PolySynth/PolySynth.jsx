@@ -6,7 +6,7 @@ import Module from 'src/components/Module';
 import Knob from 'src/components/Knob';
 import Select from 'src/components/Select';
 import presetData from 'src/util/presetData';
-import { getNoteInfo, WAVEFORM, FILTER } from 'src/util/util';
+import { getNoteInfo, WAVEFORM, FILTER, REVERB } from 'src/util/util';
 
 const BASE_CLASS_NAME = 'PolySynth';
 
@@ -17,7 +17,17 @@ let synthPos = 0;
 const incrementSynthPos = () => synthPos = (synthPos + 1) % synthArr.length;
 
 const synthMix = new Nodes.Compressor(AC);
+
+// Master Effects
 const masterGain = new Nodes.Gain(AC);
+const masterFilter = new Nodes.Filter(AC);
+const masterDistortion = new Nodes.Distortion(AC);
+const masterDelay = new Nodes.Delay(AC);
+const masterReverb = new Nodes.Reverb(AC);
+const vibratoLFO = new Nodes.LFO(AC);
+const masterBitCrush = new Nodes.BitCrusher(AC);
+// const masterCompressor = new Nodes.Compressor(AC);
+const masterEQ2 = new Nodes.EQ2(AC);
 
 const analyserNode = AC.createAnalyser();
 analyserNode.fftSize = 2048;
@@ -32,12 +42,16 @@ const PolySynth = ({ className, theme }) => {
     const [currentPreset, setCurrentPreset] = useState('- INIT -');
 
     // Preset State
+    const [portamentoSpeed, setPortamentoSpeed] = useState(0);
     const [masterVolume, setMasterVolume] = useState(0.75);
+    const [masterFilterFreq, setMasterFilterFreq] = useState(11000);
+    const [masterFilterQ, setMasterFilterQ] = useState(0);
+    const [masterFilterType, setMasterFilterType] = useState('lowpass');
+    const [vcoType, setVcoType] = useState('sine');
     const [gainAttack, setGainAttack] = useState(0);
     const [gainDecay, setGainDecay] = useState(0);
     const [gainSustain, setGainSustain] = useState(1);
     const [gainRelease, setGainRelease] = useState(0);
-    const [vcoType, setVcoType] = useState('sine');
     const [filterType, setFilterType] = useState('lowpass');
     const [filterFreq, setFilterFreq] = useState(6000);
     const [filterQ, setFilterQ] = useState(0);
@@ -45,7 +59,20 @@ const PolySynth = ({ className, theme }) => {
     const [filterDecay, setFilterDecay] = useState(0);
     const [filterRelease, setFilterRelease] = useState(0);
     const [filterEnvAmount, setFilterEnvAmount] = useState(0);
-    const [portamentoSpeed, setPortamentoSpeed] = useState(0);
+    const [distortionAmount, setDistortionAmount] = useState(0);
+    const [distortionDist, setDistortionDist] = useState(0);
+    const [reverbType, setReverbType] = useState('reverb1');
+    const [reverbAmount, setReverbAmount] = useState(0);
+    const [delayTime, setDelayTime] = useState(0);
+    const [delayFeedback, setDelayFeedback] = useState(0);
+    const [delayTone, setDelayTone] = useState(4400);
+    const [delayAmount, setDelayAmount] = useState(0);
+    const [vibratoDepth, setVibratoDepth] = useState(0);
+    const [vibratoRate, setVibratoRate] = useState(0);
+    const [bitCrushDepth, setBitCrushDepth] = useState(8);
+    const [bitCrushAmount, setBitCrushAmount] = useState(0);
+    const [eqLowGain, setEqLowGain] = useState(0);
+    const [eqHighGain, setEqHighGain] = useState(0);
 
     const octaveUp = () => { if (octaveMod < 6) setOctaveMod(octaveMod + 1) };
     const octaveDown = () => { if (octaveMod > 0) setOctaveMod(octaveMod - 1) };
@@ -57,15 +84,30 @@ const PolySynth = ({ className, theme }) => {
     };
 
     const initSynth = () => {
-        masterGain.connect(AC.destination);
-
-        synthMix.connect(analyserNode);
-        synthMix.connect(masterGain.getNode());
         synthArr.forEach(synth => {
             synth.connect(synthMix.getNode());
+            vibratoLFO.connect(synth.getNode().detune);
             synth.init();
         });
+
+        vibratoLFO.start();
+
+        // Compressing all synths together to avoid clipping/distortion
+        synthMix.connect(masterDistortion.getNode());
+        // Limiter-type settings
+        synthMix.setThreshold(-6);
+        synthMix.setKnee(0);
         synthMix.setRatio(20);
+
+        masterDistortion.connect(masterDelay.getNode());
+        masterDelay.connect(masterBitCrush.getNode());
+        masterBitCrush.connect(masterReverb.getNode());
+        masterReverb.connect(masterFilter.getNode());
+
+        masterFilter.connect(analyserNode);
+        masterFilter.connect(masterGain.getNode());
+
+        masterGain.connect(AC.destination);
 
         syncNodesToState();
     };
@@ -74,12 +116,31 @@ const PolySynth = ({ className, theme }) => {
     const syncNodesToState = () => {
         masterGain.setGain(masterVolume);
 
+        masterFilter.setType(masterFilterType);
+        masterFilter.setFreq(masterFilterFreq);
+        masterFilter.setQ(masterFilterQ);
+
         synthArr.forEach(synth => {
             synth.setWaveform(vcoType);
             synth.setFilterFreq(filterFreq);
             synth.setFilterType(filterType)
             synth.setFilterQ(filterQ);
         });
+
+        masterDistortion.setAmount(distortionDist);
+        masterDistortion.setDistortion(distortionAmount);
+        masterDelay.setTone(delayTone);
+        masterDelay.setAmount(delayAmount);
+        masterDelay.setDelayTime(delayTime);
+        masterDelay.setFeedback(delayFeedback);
+        masterReverb.setAmount(reverbAmount);
+        masterReverb.setType(reverbType);
+        masterBitCrush.setBitDepth(bitCrushDepth);
+        masterBitCrush.setAmount(bitCrushAmount);
+        vibratoLFO.setRate(vibratoRate);
+        vibratoLFO.setDepth(vibratoDepth);
+        masterEQ2.setLowGain(eqLowGain);
+        masterEQ2.setHighGain(eqHighGain);
     }
 
     const getGainEnv = () => ({
@@ -237,6 +298,10 @@ const PolySynth = ({ className, theme }) => {
         const preset = presetData[currentPreset];
 
         setMasterVolume(preset.masterVolume);
+        setPortamentoSpeed(preset.portamentoSpeed);
+        setMasterFilterType(preset.masterFilterType);
+        setMasterFilterFreq(preset.masterFilterFreq);
+        setMasterFilterQ(preset.masterFilterQ);
         setGainAttack(preset.gainAttack);
         setGainDecay(preset.gainDecay);
         setGainSustain(preset.gainSustain);
@@ -249,7 +314,20 @@ const PolySynth = ({ className, theme }) => {
         setFilterDecay(preset.filterDecay);
         setFilterRelease(preset.filterRelease);
         setFilterEnvAmount(preset.filterEnvAmount);
-        setPortamentoSpeed(preset.portamentoSpeed);
+        setDistortionAmount(preset.distortionAmount);
+        setDistortionDist(preset.distortionDist);
+        setDelayAmount(preset.delayAmount);
+        setDelayFeedback(preset.delayFeedback);
+        setDelayTime(preset.delayTime);
+        setDelayTone(preset.delayTone);
+        setReverbType(preset.reverbType);
+        setReverbAmount(preset.reverbAmount);
+        setVibratoDepth(preset.vibratoDepth);
+        setVibratoRate(preset.vibratoRate);
+        setBitCrushAmount(preset.bitCrushAmount);
+        setBitCrushDepth(preset.bitCrushDepth);
+        setEqLowGain(preset.eqLowGain);
+        setEqHighGain(preset.eqHighGain);
 
         setTimeout(syncNodesToState, 0);
     }, [currentPreset]);
@@ -267,6 +345,15 @@ const PolySynth = ({ className, theme }) => {
             <br/>
 
             <Module label="Testing" columns={3}>
+                <Select
+                    label="Waveform"
+                    value={vcoType}
+                    onUpdate={(val) => {
+                        setVcoType(val);
+                        synthArr.forEach(synth => synth.setWaveform(val));
+                    }}
+                    options={WAVEFORM}
+                />
                 <Knob
                     label="Cutoff"
                     value={filterFreq}
@@ -278,15 +365,6 @@ const PolySynth = ({ className, theme }) => {
                     }}
                 />
                 <Select
-                    label="Waveform"
-                    value={vcoType}
-                    onUpdate={(val) => {
-                        setVcoType(val);
-                        synthArr.forEach(synth => synth.setWaveform(val));
-                    }}
-                    options={WAVEFORM}
-                />
-                <Select
                     label="Filter"
                     value={filterType}
                     onUpdate={(val) => {
@@ -294,6 +372,23 @@ const PolySynth = ({ className, theme }) => {
                         synthArr.forEach(synth => synth.setFilterType(val));
                     }}
                     options={FILTER}
+                />
+                <Knob
+                    label="Reverb"
+                    value={reverbAmount}
+                    onUpdate={(val) => {
+                        masterReverb.setAmount(val);
+                        setReverbAmount(val);
+                    }}
+                />
+                <Select
+                    label="Reverb Type"
+                    value={reverbType}
+                    onUpdate={(val) => {
+                        setReverbType(val);
+                        masterReverb.setType(val);
+                    }}
+                    options={REVERB}
                 />
             </Module>
         </div>

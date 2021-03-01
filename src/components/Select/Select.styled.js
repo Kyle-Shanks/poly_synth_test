@@ -51,6 +51,7 @@ export const Input = styled.div`
     border-radius: ${SPACING.s};
     overflow: hidden;
     border: ${borderWidthM} solid ${({ theme, isDropdownOpen }) => isDropdownOpen ? theme.strong : theme.mid};
+    background-color: ${({ theme, isDropdownOpen }) => isDropdownOpen ? theme.mid : 'transparent'};
 
     &:hover {
         border: ${borderWidthM} solid ${({ theme }) => theme.strong};

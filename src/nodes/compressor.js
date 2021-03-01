@@ -2,9 +2,8 @@ class Compressor {
     constructor(AC) {
         this.AC = AC;
         this.node = this.AC.createDynamicsCompressor();
-        this.node.attack.value = 0.01;
-        this.node.release.value = 0.1;
-        // this.node.reduction = -4;
+        this.node.attack.value = 0.005;
+        this.node.release.value = 0.05;
     }
 
     connect = (destination) => {
@@ -21,6 +20,9 @@ class Compressor {
     getRatio = () => this.node.ratio.value;
 
     // Setters
+    setKnee = (val) => {
+        this.node.knee.setValueAtTime(val, this.AC.currentTime);
+    }
     setThreshold = (val) => {
         this.node.threshold.setValueAtTime(val, this.AC.currentTime);
     }
