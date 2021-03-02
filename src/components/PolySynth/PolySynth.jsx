@@ -7,6 +7,7 @@ import Knob from 'src/components/Knob';
 import Select from 'src/components/Select';
 import presetData from 'src/util/presetData';
 import { getNoteInfo, WAVEFORM, FILTER, REVERB } from 'src/util/util';
+import { ModuleGridContainer } from './PolySynth.styled';
 
 const BASE_CLASS_NAME = 'PolySynth';
 
@@ -345,59 +346,59 @@ const PolySynth = ({ className, theme }) => {
 
     return (
         <div className={`${BASE_CLASS_NAME} ${className}`.trim()}>
+            <ModuleGridContainer>
+                <Module label="Testing" columns={3}>
+                    <Select
+                        label="Waveform"
+                        value={vcoType}
+                        onUpdate={(val) => {
+                            setVcoType(val);
+                            synthArr.forEach(synth => synth.setWaveform(val));
+                        }}
+                        options={WAVEFORM}
+                    />
+                    <Knob
+                        label="Cutoff"
+                        value={filterFreq}
+                        modifier={11000}
+                        isRounded
+                        onUpdate={(val) => {
+                            setFilterFreq(val);
+                            synthArr.forEach(synth => synth.setFilterFreq(val));
+                        }}
+                    />
+                    <Select
+                        label="Filter"
+                        value={filterType}
+                        onUpdate={(val) => {
+                            setFilterType(val);
+                            synthArr.forEach(synth => synth.setFilterType(val));
+                        }}
+                        options={FILTER}
+                    />
+                    <Knob
+                        label="Reverb"
+                        value={reverbAmount}
+                        onUpdate={(val) => {
+                            masterReverb.setAmount(val);
+                            setReverbAmount(val);
+                        }}
+                    />
+                    <Select
+                        label="Reverb Type"
+                        value={reverbType}
+                        onUpdate={(val) => {
+                            setReverbType(val);
+                            masterReverb.setType(val);
+                        }}
+                        options={REVERB}
+                    />
+                </Module>
+            </ModuleGridContainer>
+
             <canvas ref={scopeCtx} id="scope" />
             <canvas ref={spectrumCtx} id="spectrum" />
-            <br/>
-
-            <Module label="Testing" columns={3}>
-                <Select
-                    label="Waveform"
-                    value={vcoType}
-                    onUpdate={(val) => {
-                        setVcoType(val);
-                        synthArr.forEach(synth => synth.setWaveform(val));
-                    }}
-                    options={WAVEFORM}
-                />
-                <Knob
-                    label="Cutoff"
-                    value={filterFreq}
-                    modifier={11000}
-                    isRounded
-                    onUpdate={(val) => {
-                        setFilterFreq(val);
-                        synthArr.forEach(synth => synth.setFilterFreq(val));
-                    }}
-                />
-                <Select
-                    label="Filter"
-                    value={filterType}
-                    onUpdate={(val) => {
-                        setFilterType(val);
-                        synthArr.forEach(synth => synth.setFilterType(val));
-                    }}
-                    options={FILTER}
-                />
-                <Knob
-                    label="Reverb"
-                    value={reverbAmount}
-                    onUpdate={(val) => {
-                        masterReverb.setAmount(val);
-                        setReverbAmount(val);
-                    }}
-                />
-                <Select
-                    label="Reverb Type"
-                    value={reverbType}
-                    onUpdate={(val) => {
-                        setReverbType(val);
-                        masterReverb.setType(val);
-                    }}
-                    options={REVERB}
-                />
-            </Module>
         </div>
-
     );
 };
 

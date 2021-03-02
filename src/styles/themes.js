@@ -19,7 +19,7 @@ export const THEMES = {
     [LIGHT]: {
         background: SHADES.white,
         lite: SHADES.grey20,
-        mid: SHADES.grey20,
+        mid: SHADES.grey30,
         strong: SHADES.grey70,
         pop: COLORS.orange,
     },
@@ -40,7 +40,7 @@ export const THEMES = {
     [MONO_LIGHT]: {
         background: SHADES.white,
         lite: SHADES.white,
-        mid: SHADES.grey20,
+        mid: SHADES.grey30,
         strong: SHADES.grey70,
         pop: SHADES.grey70,
     },
