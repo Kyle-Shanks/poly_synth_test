@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { clamp } from 'src/util/util';
 import {
@@ -46,10 +46,19 @@ const Knob = ({ isRounded, label, modifier, offset, onUpdate, type, value }) => 
 
     const [rotation, setRotation] = useState(getKnobRotationFromValue(value));
     const rotationRef = useRef(rotation);
+    const valueRef = useRef(value);
 
     const handleUpdate = (mouseY) => {
         const newRotation = clamp(rotationRef.current - (mouseY - currentY), -maxRotation, maxRotation);
-        onUpdate(getValueFromKnobRotation(newRotation));
+        const newValue = getValueFromKnobRotation(newRotation);
+
+        rotationRef.current = newRotation;
+        setRotation(newRotation);
+
+        if (newValue !== valueRef.current) {
+            valueRef.current = newValue;
+            onUpdate(newValue);
+        }
     };
 
     const handleMouseMove = (e) => {
@@ -71,11 +80,14 @@ const Knob = ({ isRounded, label, modifier, offset, onUpdate, type, value }) => 
         typeInfo[type].dashLength - (184 / (maxRotation * 2)) * (rotation + typeInfo[type].offset)
     );
 
-    useEffect(() => {
-        const newRotation = getKnobRotationFromValue(value);
+    useLayoutEffect(() => {
+        if (value !== valueRef.current) {
+            const newRotation = getKnobRotationFromValue(value);
 
-        setRotation(newRotation);
-        rotationRef.current = newRotation;
+            setRotation(newRotation);
+            rotationRef.current = newRotation;
+            valueRef.current = value;
+        }
     }, [value])
 
     return (
