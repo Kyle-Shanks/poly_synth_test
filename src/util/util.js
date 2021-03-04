@@ -1,4 +1,4 @@
-export const minTime = 0.001;
+export const minTime = 0.005;
 
 export const clamp = (val, min, max) => Math.min(max, Math.max(min, val));
 

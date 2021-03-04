@@ -45,6 +45,7 @@ class MonoSynth {
     setFilterType = (val) => this.filter.setType(val);
     setFilterFreq = (val) => this.filter.setFreq(val);
     setFilterQ = (val) => this.filter.setQ(val);
+    setFilterGain = (val) => this.filter.setGain(val);
 
     // Note trigger methods
     noteOn = (noteInfo, synthProps) => {
@@ -52,52 +53,60 @@ class MonoSynth {
 
         this.clearTimeouts();
         const { freq, note } = noteInfo;
-        const { gainEnv, filterEnv, portamento } = synthProps;
+        const { gainEnv, filterEnv, portamentoSpeed } = synthProps;
 
         this.currentNote = note;
-        this.osc.setFreq(freq, portamento);
+        this.osc.setFreq(freq, portamentoSpeed);
 
         // Gain Envelope ADS (R is in noteOff())
         if (gainEnv.a) {
-            this.gain.setGain(0, minTime); // Reset Volume
-            this.gain.setGain(1, gainEnv.a || minTime); // Attack
+            this.gain.setGain(0, 0); // Reset Volume
+            const attackTime = Math.max(gainEnv.a, minTime);
+            this.gain.setGain(1, attackTime); // Attack
 
             const timeoutId = setTimeout(() => {
-                this.gain.setGain(gainEnv.s, gainEnv.d || minTime); // Decay
-            }, (gainEnv.a * 1000));
+                this.gain.setGain(gainEnv.s, Math.max(gainEnv.d, minTime)); // Decay
+            }, (attackTime * 1000));
             this.timeoutIds.push(timeoutId);
-        } else {
+        } else if (gainEnv.d) {
             this.gain.setGain(1, minTime); // Reset Volume
-            this.gain.setGain(gainEnv.s, gainEnv.d || minTime); // Decay
+
+            const timeoutId = setTimeout(() => {
+                this.gain.setGain(gainEnv.s, Math.max(gainEnv.d, minTime)); // Decay
+            }, (minTime * 1000));
+            this.timeoutIds.push(timeoutId);
+        } else if (gainEnv.s) {
+            this.gain.setGain(gainEnv.s, minTime); // Set Volume
         }
 
         // Filter Envelope ADS (R is in noteOff())
         if (filterEnv.amount) {
             if (filterEnv.a) {
-                this.filter.setDetune(0, minTime); // Reset Detune
-                this.filter.setDetune(filterEnv.amount, filterEnv.a || minTime); // Attack
+                this.filter.setDetune(0, 0); // Reset Detune
+                const attackTime = Math.max(filterEnv.a, minTime);
+                this.filter.setDetune(filterEnv.amount, attackTime); // Attack
 
                 const timeoutId = setTimeout(() => {
-                    this.filter.setDetune(0, filterEnv.d || minTime); // Decay
-                }, (filterEnv.a * 1000));
+                    this.filter.setDetune(0, Math.max(filterEnv.d, minTime)); // Decay
+                }, (attackTime * 1000));
                 this.timeoutIds.push(timeoutId);
-            } else {
-                this.filter.setDetune(filterEnv.amount, minTime); // Reset Detune
-                this.filter.setDetune(0, filterEnv.d || minTime); // Decay
+            } else if (filterEnv.d) {
+                this.filter.setDetune(filterEnv.amount, 0); // Reset Detune
+                this.filter.setDetune(0, Math.max(filterEnv.d, minTime)); // Decay
             }
         }
     }
     noteOff = ({ gainEnv, filterEnv }) => {
         this.clearTimeouts();
         this.currentNote = null;
-        this.gain.setGain(0, gainEnv.r || minTime); // Release
-        this.filter.setDetune(0, filterEnv.r || minTime); // Release
+        this.gain.setGain(0, Math.max(gainEnv.r, minTime)); // Release
+        this.filter.setDetune(0, Math.max(filterEnv.r, minTime)); // Release
     }
     noteStop = () => {
         this.clearTimeouts();
         this.currentNote = null;
         this.gain.setGain(0, minTime);
-        this.filter.setDetune(0, minTime);
+        this.filter.setDetune(0, 0);
     }
 }
 

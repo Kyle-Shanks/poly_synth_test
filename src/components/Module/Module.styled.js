@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { relaInline } from 'src/styles/util';
+import { relaInline, absCenter } from 'src/styles/util';
 import { SPACING, borderWidthS, borderRadiusM } from 'src/styles/constants';
 
 export const ComponentContainer = styled.div`
@@ -33,14 +33,14 @@ export const GridContainer = styled.div`
     grid-template-rows: ${({ rows }) => `repeat(${rows}, 1fr)`};
     grid-template-columns: ${({ columns }) => `repeat(${columns}, 1fr)`};
     gap: ${({ gap }) => gap };
+    align-items: center;
+    justify-items: center;
 `;
 
 export const Label = styled.h4`
-    position: absolute;
+    ${absCenter}
     top: 0;
-    left: ${SPACING.ml};
-    color: ${({ theme }) => theme.strong};
-    transform: translateY(-50%);
+    color: ${({ theme }) => theme.pop};
     padding: 0 ${SPACING.s} ${SPACING.xs};
     background-color: ${({theme}) => theme.background};
 `;
