@@ -4,26 +4,23 @@ import { ComponentContainer, GridContainer, Bolt, Label } from './Module.styled'
 
 const BASE_CLASS_NAME = 'Module';
 
-const Module = ({ className, children, columns, gap, label, rows }) => {
-
-    return (
-        <ComponentContainer className={`${BASE_CLASS_NAME} ${className}`.trim()}>
-            <Bolt />
-            <Bolt />
-            <Bolt />
-            <Bolt />
-            <Label className={`${BASE_CLASS_NAME}__Label`}>{label}</Label>
-            <GridContainer
-                className={`${BASE_CLASS_NAME}__GridContainer`}
-                columns={columns}
-                rows={rows}
-                gap={gap}
-            >
-                {children}
-            </GridContainer>
-        </ComponentContainer>
-    );
-};
+const Module = ({ className, children, columns, gap, label, rows }) => (
+    <ComponentContainer className={`${BASE_CLASS_NAME} ${className}`.trim()}>
+        <Bolt />
+        <Bolt />
+        <Bolt />
+        <Bolt />
+        <Label className={`${BASE_CLASS_NAME}__Label`}>{label}</Label>
+        <GridContainer
+            className={`${BASE_CLASS_NAME}__GridContainer`}
+            columns={columns}
+            rows={rows}
+            gap={gap}
+        >
+            {children}
+        </GridContainer>
+    </ComponentContainer>
+);
 
 Module.propTypes = {
     className: PropTypes.string,

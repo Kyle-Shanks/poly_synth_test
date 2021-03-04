@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useLayoutEffect, useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as Nodes from 'src/nodes';
 import MonoSynth from 'src/components/MonoSynth';
@@ -296,14 +296,14 @@ const PolySynth = ({ className, theme }) => {
     }
 
     // Init
-    useEffect(() => {
+    useLayoutEffect(() => {
         initSynth();
         setTimeout(syncNodesToState, 0);
         // startAnalyser();
     }, []);
 
     // Load Preset
-    useEffect(() => {
+    useLayoutEffect(() => {
         const preset = presetData[currentPreset];
 
         setMasterVolume(preset.masterVolume);
@@ -528,7 +528,7 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
-                <Module label="Vibrato" columns={1} rows={2}>
+                <Module label="Vibrato" columns={2} rows={1}>
                     <Knob
                         label="Depth"
                         value={vibratoDepth}

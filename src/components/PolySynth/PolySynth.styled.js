@@ -4,7 +4,7 @@ import { SPACING, borderRadiusM, borderWidthS } from 'src/styles/constants';
 export const ModuleGridContainer = styled.div`
     display: grid;
     position: relative;
-    width: 58rem;
+    width: 64rem;
     grid-template-columns: repeat(3, 1fr);
     gap: ${SPACING.xl} ${SPACING.l};
     justify-items: center;
