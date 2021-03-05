@@ -356,7 +356,7 @@ const PolySynth = ({ className, theme }) => {
     return (
         <div className={`${BASE_CLASS_NAME} ${className}`.trim()}>
             <ModuleGridContainer>
-                <Module label="VCO" columns={1} rows={1}>
+                <Module label="VCO" columns={2} rows={1}>
                     <Select
                         label="Waveform"
                         options={WAVEFORM}
@@ -364,6 +364,17 @@ const PolySynth = ({ className, theme }) => {
                         onUpdate={(val) => {
                             setVcoType(val);
                             synthArr.forEach(synth => synth.setWaveform(val));
+                        }}
+                    />
+                    <Knob
+                        label="Polyphony"
+                        value={polyphony}
+                        modifier={7}
+                        offset={1}
+                        isRounded
+                        onUpdate={(val) => {
+                            setPolyphony(val);
+                            resetSynthPos();
                         }}
                     />
                 </Module>
@@ -392,6 +403,27 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
+                <Module label="Vibrato" columns={2} rows={1}>
+                    <Knob
+                        label="Depth"
+                        value={vibratoDepth}
+                        modifier={200}
+                        onUpdate={(val) => {
+                            vibratoLFO.setDepth(val);
+                            setVibratoDepth(val);
+                        }}
+                    />
+                    <Knob
+                        label="Rate"
+                        value={vibratoRate}
+                        modifier={50}
+                        onUpdate={(val) => {
+                            vibratoLFO.setRate(val);
+                            setVibratoRate(val);
+                        }}
+                    />
+                </Module>
+
                 <Module label="Distortion" columns={2} rows={1}>
                     <Knob
                         label="Distortion"
@@ -408,26 +440,6 @@ const PolySynth = ({ className, theme }) => {
                         onUpdate={(val) => {
                             masterDistortion.setAmount(val);
                             setDistortionAmount(val);
-                        }}
-                    />
-                </Module>
-
-                <Module label="Reverb" columns={1} rows={2}>
-                    <Select
-                        label="Type"
-                        options={REVERB}
-                        value={reverbType}
-                        onUpdate={(val) => {
-                            masterReverb.setType(val);
-                            setReverbType(val);
-                        }}
-                    />
-                    <Knob
-                        label="Dry/Wet"
-                        value={reverbAmount}
-                        onUpdate={(val) => {
-                            masterReverb.setAmount(val);
-                            setReverbAmount(val);
                         }}
                     />
                 </Module>
@@ -496,7 +508,49 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
-                <Module label="Delay" columns={2} rows={2}>
+                <Module label="Reverb" columns={2} rows={1}>
+                    <Select
+                        label="Type"
+                        options={REVERB}
+                        value={reverbType}
+                        onUpdate={(val) => {
+                            masterReverb.setType(val);
+                            setReverbType(val);
+                        }}
+                    />
+                    <Knob
+                        label="Dry/Wet"
+                        value={reverbAmount}
+                        onUpdate={(val) => {
+                            masterReverb.setAmount(val);
+                            setReverbAmount(val);
+                        }}
+                    />
+                </Module>
+
+                <Module label="Bit Crush" columns={2} rows={1}>
+                    <Knob
+                        label="Bit Depth"
+                        value={bitCrushDepth}
+                        modifier={14}
+                        offset={2}
+                        isRounded
+                        onUpdate={(val) => {
+                            masterBitCrush.setBitDepth(val);
+                            setBitCrushDepth(val);
+                        }}
+                    />
+                    <Knob
+                        label="Dry/Wet"
+                        value={bitCrushAmount}
+                        onUpdate={(val) => {
+                            masterBitCrush.setAmount(val);
+                            setBitCrushAmount(val);
+                        }}
+                    />
+                </Module>
+
+                <Module label="Delay" columns={4} rows={1}>
                     <Knob
                         label="Time"
                         value={delayTime}
@@ -533,49 +587,6 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
-                <Module label="Vibrato" columns={2} rows={1}>
-                    <Knob
-                        label="Depth"
-                        value={vibratoDepth}
-                        modifier={200}
-                        onUpdate={(val) => {
-                            vibratoLFO.setDepth(val);
-                            setVibratoDepth(val);
-                        }}
-                    />
-                    <Knob
-                        label="Rate"
-                        value={vibratoRate}
-                        modifier={50}
-                        onUpdate={(val) => {
-                            vibratoLFO.setRate(val);
-                            setVibratoRate(val);
-                        }}
-                    />
-                </Module>
-
-                <Module label="Bit Crush" columns={2} rows={1}>
-                    <Knob
-                        label="Bit Depth"
-                        value={bitCrushDepth}
-                        modifier={14}
-                        offset={2}
-                        isRounded
-                        onUpdate={(val) => {
-                            masterBitCrush.setBitDepth(val);
-                            setBitCrushDepth(val);
-                        }}
-                    />
-                    <Knob
-                        label="Dry/Wet"
-                        value={bitCrushAmount}
-                        onUpdate={(val) => {
-                            masterBitCrush.setAmount(val);
-                            setBitCrushAmount(val);
-                        }}
-                    />
-                </Module>
-
                 <Module label="EQ2" columns={2} rows={1}>
                     <Knob
                         label="Low"
@@ -595,20 +606,6 @@ const PolySynth = ({ className, theme }) => {
                         onUpdate={(val) => {
                             masterEQ2.setHighGain(val);
                             setEqHighGain(val);
-                        }}
-                    />
-                </Module>
-
-                <Module label="Polyphony" columns={1} rows={1}>
-                    <Knob
-                        label="Voices"
-                        value={polyphony}
-                        modifier={7}
-                        offset={1}
-                        isRounded
-                        onUpdate={(val) => {
-                            setPolyphony(val);
-                            resetSynthPos();
                         }}
                     />
                 </Module>

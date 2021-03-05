@@ -14,3 +14,15 @@ export const ModuleGridContainer = styled.div`
     border: ${borderWidthS} solid ${({ theme }) => theme.strong};
     border-radius: ${borderRadiusM};
 `;
+
+export const ModuleFlexContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    width: 64rem;
+    gap: ${SPACING.xl} ${SPACING.l};
+    margin: ${SPACING.m} auto;
+    padding: ${SPACING.l} ${SPACING.xl} ${SPACING.xl} ${SPACING.l};
+    border: ${borderWidthS} solid ${({ theme }) => theme.strong};
+    border-radius: ${borderRadiusM};
+`;
