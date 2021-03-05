@@ -8,18 +8,23 @@ import { COLORS, SHADES } from 'src/styles/palette';
 export const LIGHT = 'light';
 export const BRAUN = 'braun';
 export const DESERT = 'desert';
-export const MIST = 'mist';
 export const DEMICHROME = 'demichrome';
 export const METALLIC = 'metallic';
 export const GAMEBOY = 'gameboy';
 export const MINTY = 'minty';
 export const USA = 'usa';
+export const GIN = 'gin';
 // Dark
 export const DARK = 'dark';
 export const BLUE = 'blue';
 export const RASPBERRY = 'raspberry';
 export const COZY = 'cozy';
 export const TERMINAL = 'terminal';
+export const ALIEN = 'alien';
+export const LASER = 'laser';
+export const ELECHEAD = 'elecHead';
+export const M8 = 'm8';
+export const RONIN = 'ronin';
 
 // - Three color themes -
 // Light
@@ -30,7 +35,7 @@ export const MONO_JARI = 'monoJari';
 // Dark
 export const MONO_DARK = 'monoDark';
 export const MONO_BLUE = 'monoBlue';
-export const MONO_TERMINAL = 'monoTerminal';
+export const MONO_GREEN = 'monoGreen';
 export const MONO_TINY_INV = 'monoTinyInv';
 
 export const THEMES = {
@@ -77,26 +82,12 @@ export const THEMES = {
         strong: '#e7e6e6',
         pop: '#cd705f',
     },
-    [TERMINAL]: {
-        background: '#2a2f32',
-        lite: '#474f54',
-        mid: '#474f54',
-        strong: '#bfddb2',
-        pop: '#acb766',
-    },
     [DESERT]: {
         background: '#fff6d3',
         lite: '#f9a875',
         mid: '#f9a875',
         strong: '#7c3f58',
         pop: '#eb6b6f',
-    },
-    [MIST]: {
-        background: '#c4f0c2',
-        lite: '#5ab9a8',
-        mid: '#5ab9a8',
-        strong: '#2d1b00',
-        pop: '#1e606e',
     },
     [DEMICHROME]: {
         background: '#e9efec',
@@ -119,6 +110,13 @@ export const THEMES = {
         strong: '#006636',
         pop: '#579938',
     },
+    [TERMINAL]: {
+        background: '#081820',
+        lite: '#346856',
+        mid: '#346856',
+        strong: '#e0f8d0',
+        pop: '#88c070',
+    },
     [MINTY]: {
         background: '#bffce6',
         lite: '#65dcb4',
@@ -133,7 +131,48 @@ export const THEMES = {
         strong: '#01334e',
         pop: '#d71a21',
     },
-
+    [ALIEN]: {
+        background: '#2d293d',
+        lite: '#5c5b77',
+        mid: '#5c5b77',
+        strong: '#e8ffee',
+        pop: '#78db97',
+    },
+    [LASER]: {
+        background: '#271d2c',
+        lite: '#7b6960',
+        mid: '#7b6960',
+        strong: '#fff8ed',
+        pop: '#e01f3f',
+    },
+    [ELECHEAD]: {
+        background: '#08242b',
+        lite: '#1d7c95',
+        mid: '#1d7c95',
+        strong: '#ffffff',
+        pop: '#fda000',
+    },
+    [M8]: {
+        background: '#000d1a',
+        lite: '#49617c',
+        mid: '#49617c',
+        strong: '#e2ebf1',
+        pop: '#ffe100',
+    },
+    [RONIN]: {
+        background: '#29272b',
+        lite: '#66606c',
+        mid: '#66606c',
+        strong: '#ffffff',
+        pop: '#e47465',
+    },
+    [GIN]: {
+        background: '#edeae9',
+        lite: '#bab0b0',
+        mid: '#bab0b0',
+        strong: '#4f5b66',
+        pop: '#01abce',
+    },
 
     [MONO_LIGHT]: {
         background: SHADES.white,
@@ -163,7 +202,7 @@ export const THEMES = {
         strong: '#6fc3c3',
         pop: '#6fc3c3',
     },
-    [MONO_TERMINAL]: {
+    [MONO_GREEN]: {
         background: '#2a2f32',
         lite: '#2a2f32',
         mid: '#474f54',

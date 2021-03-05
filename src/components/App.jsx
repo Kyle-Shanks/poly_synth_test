@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import PolySynth from 'src/components/PolySynth';
 import { GlobalStyles } from 'src/styles/globalStyles';
-import { THEMES, DARK } from 'src/styles/themes';
+import { THEMES, BLUE } from 'src/styles/themes';
 
 const App = (props) => {
-    const [theme, setTheme] = useState(DARK);
+    const [theme, setTheme] = useState(BLUE);
 
     return (
         <ThemeProvider theme={THEMES[theme]}>

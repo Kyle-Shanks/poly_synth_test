@@ -15,7 +15,6 @@ const AC = new AudioContext();
 const polyphony = 8;
 const synthArr = Array(polyphony).fill(0).map(_ => new MonoSynth(AC));
 let synthPos = 0;
-const incrementSynthPos = () => synthPos = (synthPos + 1) % synthArr.length;
 
 const synthMix = new Nodes.Compressor(AC);
 
@@ -75,9 +74,13 @@ const PolySynth = ({ className, theme }) => {
     const [bitCrushAmount, setBitCrushAmount] = useState(0);
     const [eqLowGain, setEqLowGain] = useState(0);
     const [eqHighGain, setEqHighGain] = useState(0);
+    const [polyphony, setPolyphony] = useState(synthArr.length);
 
     const octaveUp = () => { if (octaveMod < 6) setOctaveMod(octaveMod + 1) };
     const octaveDown = () => { if (octaveMod > 0) setOctaveMod(octaveMod - 1) };
+
+    const resetSynthPos = () => synthPos = 0;
+    const incrementSynthPos = () => synthPos = (synthPos + 1) % polyphony;
 
     const activateSynth = () => {
         setSynthActive(true);
@@ -306,6 +309,7 @@ const PolySynth = ({ className, theme }) => {
     useLayoutEffect(() => {
         const preset = presetData[currentPreset];
 
+        setPolyphony(preset.polyphony);
         setMasterVolume(preset.masterVolume);
         setPortamentoSpeed(preset.portamentoSpeed);
         setMasterFilterType(preset.masterFilterType);
@@ -339,6 +343,7 @@ const PolySynth = ({ className, theme }) => {
         setEqLowGain(preset.eqLowGain);
         setEqHighGain(preset.eqHighGain);
 
+        resetSynthPos();
         setTimeout(syncNodesToState, 0);
     }, [currentPreset]);
 
@@ -450,7 +455,7 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="Q"
                         value={filterQ}
-                        modifier={10}
+                        modifier={20}
                         onUpdate={(val) => {
                             synthArr.forEach(synth => synth.setFilterQ(val));
                             setFilterQ(val);
@@ -590,6 +595,20 @@ const PolySynth = ({ className, theme }) => {
                         onUpdate={(val) => {
                             masterEQ2.setHighGain(val);
                             setEqHighGain(val);
+                        }}
+                    />
+                </Module>
+
+                <Module label="Polyphony" columns={1} rows={1}>
+                    <Knob
+                        label="Voices"
+                        value={polyphony}
+                        modifier={7}
+                        offset={1}
+                        isRounded
+                        onUpdate={(val) => {
+                            setPolyphony(val);
+                            resetSynthPos();
                         }}
                     />
                 </Module>
