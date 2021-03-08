@@ -1,10 +1,11 @@
 import Gain from './gain';
 
+const MAX_FREQ = 44100;
+
 class Oscillator {
     constructor(AC) {
         this.AC = AC;
         this.WAVEFORMS = ['sine', 'triangle', 'square', 'sawtooth'];
-        this.maxFreq = 44100;
 
         this.node = this.AC.createOscillator();
         this.gain = new Gain(this.AC);
@@ -32,7 +33,7 @@ class Oscillator {
         this.node.type = type;
     }
     setFreq = (freq, time = 0) => {
-        if (freq < 0 || freq > this.maxFreq) return false;
+        if (freq < 0 || freq > MAX_FREQ) return false;
         time
             ? this.node.frequency.setTargetAtTime(freq, this.AC.currentTime, time)
             : this.node.frequency.setValueAtTime(freq, this.AC.currentTime);

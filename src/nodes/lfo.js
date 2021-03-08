@@ -1,6 +1,9 @@
 import Gain from './gain';
 import Oscillator from './oscillator';
 
+const MAX_RATE = 100;
+const MAX_DEPTH = 1000;
+
 class LFO {
     constructor(AC) {
         this.AC = AC;
@@ -10,9 +13,6 @@ class LFO {
         this.osc.setType('sine');
 
         this.osc.connect(this.depth.getNode());
-
-        this.maxRate = 100;
-        this.maxDepth = 1000;
     }
 
     connect = (destination) => {
@@ -31,11 +31,11 @@ class LFO {
 
     // Setters
     setRate = val => {
-        if (val < 0 || val > this.maxRate) return false;
+        if (val < 0 || val > MAX_RATE) return false;
         this.osc.setFreq(val);
     }
     setDepth = val => {
-        if (val < 0 || val > this.maxDepth) return false;
+        if (val < 0 || val > MAX_DEPTH) return false;
         this.depth.setGain(val);
     }
     setType = type => this.osc.setType(type);

@@ -5,7 +5,7 @@ import { SPACING, borderWidthS, borderRadiusM } from 'src/styles/constants';
 export const ComponentContainer = styled.div`
     ${relaInline}
     padding: ${SPACING.m};
-    border: ${borderWidthS} solid ${({theme}) => theme.strong};
+    border: ${borderWidthS} solid ${({ theme }) => theme.strong};
     border-radius: ${borderRadiusM};
     background-color: ${({ theme }) => theme.background};
     width: fit-content;
@@ -40,6 +40,7 @@ export const GridContainer = styled.div`
 export const Label = styled.h4`
     ${absCenter}
     top: 0;
+    width: fit-content;
     color: ${({ theme }) => theme.pop};
     padding: 0 ${SPACING.s} ${SPACING.xs};
     background-color: ${({theme}) => theme.background};

@@ -1,5 +1,7 @@
 import Gain from './gain';
 
+const MAX_DIST = 30;
+
 const createDistCurve = (gain = 0) => {
     const n_samples = 44100;
     const curve = new Float32Array(n_samples);
@@ -24,7 +26,6 @@ class Distortion {
         this.node.connect(this.wetGain.getNode());
 
         this.distortion = 0;
-        this.maxDistortion = 30;
 
         this.setDistortion(0);
         this.setAmount(0);
@@ -49,7 +50,7 @@ class Distortion {
 
     // Setters
     setDistortion = val => {
-        if (val < 0 || val > this.maxDistortion) return false;
+        if (val < 0 || val > MAX_DIST) return false;
         this.distortion = val;
         this.node.curve = createDistCurve(val);
     }

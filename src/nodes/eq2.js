@@ -1,7 +1,11 @@
+const MAX_GAIN = 10;
+const MAX_FREQ = 11000;
+const MAX_LOW_FREQ = 1000;
+const MIN_HIGH_FREQ = 1000;
+
 class EQ2 {
     constructor(AC) {
         this.AC = AC;
-        this.maxGain = 10;
 
         // Low
         this.low = this.AC.createBiquadFilter();
@@ -29,19 +33,29 @@ class EQ2 {
     getNode = () => this.low;
     getLowGain = () => this.low.gain.value;
     getHighGain = () => this.high.gain.value;
+    getLowFreq = () => this.low.frequency.value;
+    getHighFreq = () => this.high.frequency.value;
 
     // Setters
     setLowGain = (gain, time = 0) => {
-        if (gain < -this.maxGain || gain > this.maxGain) return false;
+        if (gain < -MAX_GAIN || gain > MAX_GAIN) return false;
         time
             ? this.low.gain.setTargetAtTime(gain, this.AC.currentTime, time)
             : this.low.gain.setValueAtTime(gain, this.AC.currentTime);
     }
     setHighGain = (gain, time = 0) => {
-        if (gain < -this.maxGain || gain > this.maxGain) return false;
+        if (gain < -MAX_GAIN || gain > MAX_GAIN) return false;
         time
             ? this.high.gain.setTargetAtTime(gain, this.AC.currentTime, time)
             : this.high.gain.setValueAtTime(gain, this.AC.currentTime);
+    }
+    setLowFreq = (freq) => {
+        if (freq < 0 || freq > MAX_LOW_FREQ) return false;
+        this.low.frequency.setValueAtTime(freq, this.AC.currentTime);
+    }
+    setHighFreq = (freq) => {
+        if (freq < MIN_HIGH_FREQ || freq > MAX_FREQ) return false;
+        this.high.frequency.setValueAtTime(freq, this.AC.currentTime);
     }
 }
 

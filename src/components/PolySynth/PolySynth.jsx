@@ -32,6 +32,22 @@ const masterEQ2 = new Nodes.EQ2(AC);
 const analyserNode = AC.createAnalyser();
 analyserNode.fftSize = 2048;
 
+const getNodes = () => ({
+    synths: synthArr,
+    masterGain,
+    masterFilter,
+    masterDistortion,
+    masterDelay,
+    masterReverb,
+    vibratoLFO,
+    masterBitCrush,
+    masterLimiter,
+    masterEQ2,
+    polyphony,
+});
+
+window.getNodes = getNodes;
+
 const PolySynth = ({ className, theme }) => {
     const scopeCtx = useRef();
     const spectrumCtx = useRef();
@@ -42,11 +58,13 @@ const PolySynth = ({ className, theme }) => {
     const [currentPreset, setCurrentPreset] = useState('- INIT -');
 
     // Preset State
+    const [polyphony, setPolyphony] = useState(synthArr.length);
     const [portamentoSpeed, setPortamentoSpeed] = useState(0);
     const [masterVolume, setMasterVolume] = useState(0.75);
+    const [masterFilterType, setMasterFilterType] = useState('lowpass');
     const [masterFilterFreq, setMasterFilterFreq] = useState(11000);
     const [masterFilterQ, setMasterFilterQ] = useState(0);
-    const [masterFilterType, setMasterFilterType] = useState('lowpass');
+    const [masterFilterGain, setMasterFilterGain] = useState(0);
     const [vcoType, setVcoType] = useState('sine');
     const [gainAttack, setGainAttack] = useState(0);
     const [gainDecay, setGainDecay] = useState(0);
@@ -74,7 +92,8 @@ const PolySynth = ({ className, theme }) => {
     const [bitCrushAmount, setBitCrushAmount] = useState(0);
     const [eqLowGain, setEqLowGain] = useState(0);
     const [eqHighGain, setEqHighGain] = useState(0);
-    const [polyphony, setPolyphony] = useState(synthArr.length);
+    const [eqLowFreq, setEqLowFreq] = useState(320);
+    const [eqHighFreq, setEqHighFreq] = useState(3200);
 
     const octaveUp = () => { if (octaveMod < 6) setOctaveMod(octaveMod + 1) };
     const octaveDown = () => { if (octaveMod > 0) setOctaveMod(octaveMod - 1) };
@@ -130,6 +149,7 @@ const PolySynth = ({ className, theme }) => {
         masterFilter.setType(masterFilterType);
         masterFilter.setFreq(masterFilterFreq);
         masterFilter.setQ(masterFilterQ);
+        masterFilter.setGain(masterFilterGain);
 
         synthArr.forEach(synth => {
             synth.setWaveform(vcoType);
@@ -153,6 +173,8 @@ const PolySynth = ({ className, theme }) => {
         vibratoLFO.setDepth(vibratoDepth);
         masterEQ2.setLowGain(eqLowGain);
         masterEQ2.setHighGain(eqHighGain);
+        masterEQ2.setLowFreq(eqLowFreq);
+        masterEQ2.setHighFreq(eqHighFreq);
     }
 
     const getGainEnv = () => ({
@@ -315,6 +337,7 @@ const PolySynth = ({ className, theme }) => {
         setMasterFilterType(preset.masterFilterType);
         setMasterFilterFreq(preset.masterFilterFreq);
         setMasterFilterQ(preset.masterFilterQ);
+        setMasterFilterGain(preset.masterFilterGain);
         setGainAttack(preset.gainAttack);
         setGainDecay(preset.gainDecay);
         setGainSustain(preset.gainSustain);
@@ -342,6 +365,8 @@ const PolySynth = ({ className, theme }) => {
         setBitCrushDepth(preset.bitCrushDepth);
         setEqLowGain(preset.eqLowGain);
         setEqHighGain(preset.eqHighGain);
+        setEqLowFreq(preset.eqLowFreq);
+        setEqHighFreq(preset.eqHighFreq);
 
         resetSynthPos();
         setTimeout(syncNodesToState, 0);
@@ -355,6 +380,12 @@ const PolySynth = ({ className, theme }) => {
 
     return (
         <div className={`${BASE_CLASS_NAME} ${className}`.trim()}>
+            <select value={currentPreset} onChange={(e) => setCurrentPreset(e.target.value)}>
+                {Object.keys(presetData).map((preset) => (
+                    <option key={`Preset_${preset}`} value={preset}>{preset}</option>
+                ))}
+            </select>
+
             <ModuleGridContainer>
                 <Module label="VCO" columns={2} rows={1}>
                     <Select
@@ -383,11 +414,13 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="Attack"
                         value={gainAttack}
+                        modifier={3}
                         onUpdate={(val) => setGainAttack(val)}
                     />
                     <Knob
                         label="Decay"
                         value={gainDecay}
+                        modifier={3}
                         onUpdate={(val) => setGainDecay(val)}
                     />
                     <Knob
@@ -399,6 +432,7 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="Release"
                         value={gainRelease}
+                        modifier={3}
                         onUpdate={(val) => setGainRelease(val)}
                     />
                 </Module>
@@ -486,16 +520,19 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="Attack"
                         value={filterAttack}
+                        modifier={3}
                         onUpdate={(val) => setFilterAttack(val)}
                     />
                     <Knob
                         label="Decay"
                         value={filterDecay}
+                        modifier={3}
                         onUpdate={(val) => setFilterDecay(val)}
                     />
                     <Knob
                         label="Release"
                         value={filterRelease}
+                        modifier={3}
                         onUpdate={(val) => setFilterRelease(val)}
                     />
                     <Knob
@@ -555,6 +592,7 @@ const PolySynth = ({ className, theme }) => {
                         label="Time"
                         value={delayTime}
                         onUpdate={(val) => {
+                            console.log(val);
                             masterDelay.setDelayTime(val);
                             setDelayTime(val);
                         }}
@@ -606,6 +644,47 @@ const PolySynth = ({ className, theme }) => {
                         onUpdate={(val) => {
                             masterEQ2.setHighGain(val);
                             setEqHighGain(val);
+                        }}
+                    />
+                </Module>
+
+                <Module label="Master Filter" columns={2} rows={2}>
+                    <Select
+                        label="Type"
+                        options={FILTER}
+                        value={masterFilterType}
+                        onUpdate={(val) => {
+                            masterFilter.setType(val);
+                            setMasterFilterType(val);
+                        }}
+                    />
+                    <Knob
+                        label="Cutoff"
+                        value={masterFilterFreq}
+                        modifier={11000}
+                        isRounded
+                        onUpdate={(val) => {
+                            masterFilter.setFreq(val);
+                            setMasterFilterFreq(val);
+                        }}
+                    />
+                    <Knob
+                        label="Q"
+                        value={masterFilterQ}
+                        modifier={20}
+                        onUpdate={(val) => {
+                            masterFilter.setQ(val);
+                            setMasterFilterQ(val);
+                        }}
+                    />
+                    <Knob
+                        label="Gain"
+                        type="B"
+                        value={masterFilterGain}
+                        modifier={40}
+                        onUpdate={(val) => {
+                            masterFilter.setGain(val);
+                            setMasterFilterGain(val);
                         }}
                     />
                 </Module>

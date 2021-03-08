@@ -1,6 +1,8 @@
 import Gain from './gain';
 import Filter from './filter';
 
+const MAX_DELAY_TIME = 1;
+
 class Delay {
     constructor(AC) {
         this.AC = AC;
@@ -17,7 +19,6 @@ class Delay {
         this.feedbackGain.connect(this.delay);
 
         this.amount = 0;
-        this.maxDelayTime = 1;
 
         this.setAmount(0);
         this.setFeedback(0);
@@ -56,7 +57,7 @@ class Delay {
     setFeedback = (val) => this.feedbackGain.setGain(val);
     setTone = (val) => this.tone.setFreq(val);
     setDelayTime = (val) => {
-        if (val < 0 || val > this.maxDelayTime) return false;
+        if (val < 0 || val > MAX_DELAY_TIME) return false;
         this.delay.delayTime.setValueAtTime(val, this.AC.currentTime);
     }
 }
