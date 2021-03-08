@@ -21,6 +21,7 @@ const reverbTypeToBufferMap = {
 class Reverb {
     constructor(AC) {
         this.AC = AC;
+        this.type = 'reverb1';
         this.node = this.AC.createConvolver();
         this.dryGain = new Gain(this.AC);
         this.wetGain = new Gain(this.AC);
@@ -44,6 +45,7 @@ class Reverb {
 
     // Getters
     getNode = () => [this.dryGain.getNode(), this.node];
+    getType = () => this.type;
     getAmount = () => this.wetGain.getGain();
 
     // Setters
@@ -59,6 +61,7 @@ class Reverb {
     }
     setType = val => {
         if (!reverbTypeToBufferMap.hasOwnProperty(val)) return false;
+        this.type = val;
         const rev = reverbTypeToBufferMap[val];
         this.AC.decodeAudioData(base64ToArrayBuffer(rev),
             buffer => this.node.buffer = buffer,

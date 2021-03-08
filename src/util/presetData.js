@@ -274,7 +274,7 @@ export default {
     },
     'Analog': {
         masterVolume: 0.75,
-        polyphony: 8,
+        polyphony: 4,
         portamentoSpeed: 0,
         masterFilterType: 'lowpass',
         masterFilterFreq: 11000,

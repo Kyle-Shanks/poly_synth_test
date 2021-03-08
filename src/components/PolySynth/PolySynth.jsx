@@ -103,7 +103,6 @@ const PolySynth = ({ className, theme }) => {
 
     const activateSynth = () => {
         setSynthActive(true);
-        syncNodesToState();
         AC.resume();
     };
 
@@ -138,44 +137,7 @@ const PolySynth = ({ className, theme }) => {
         masterLimiter.setRatio(20);
 
         masterGain.connect(AC.destination);
-
-        syncNodesToState();
     };
-
-    // Sync node values to the current state
-    const syncNodesToState = () => {
-        masterGain.setGain(masterVolume);
-
-        masterFilter.setType(masterFilterType);
-        masterFilter.setFreq(masterFilterFreq);
-        masterFilter.setQ(masterFilterQ);
-        masterFilter.setGain(masterFilterGain);
-
-        synthArr.forEach(synth => {
-            synth.setWaveform(vcoType);
-            synth.setFilterFreq(filterFreq);
-            synth.setFilterType(filterType)
-            synth.setFilterQ(filterQ);
-            synth.setFilterGain(filterGain);
-        });
-
-        masterDistortion.setAmount(distortionAmount);
-        masterDistortion.setDistortion(distortionDist);
-        masterDelay.setTone(delayTone);
-        masterDelay.setAmount(delayAmount);
-        masterDelay.setDelayTime(delayTime);
-        masterDelay.setFeedback(delayFeedback);
-        masterReverb.setAmount(reverbAmount);
-        masterReverb.setType(reverbType);
-        masterBitCrush.setBitDepth(bitCrushDepth);
-        masterBitCrush.setAmount(bitCrushAmount);
-        vibratoLFO.setRate(vibratoRate);
-        vibratoLFO.setDepth(vibratoDepth);
-        masterEQ2.setLowGain(eqLowGain);
-        masterEQ2.setHighGain(eqHighGain);
-        masterEQ2.setLowFreq(eqLowFreq);
-        masterEQ2.setHighFreq(eqHighFreq);
-    }
 
     const getGainEnv = () => ({
         a: gainAttack,
@@ -323,7 +285,6 @@ const PolySynth = ({ className, theme }) => {
     // Init
     useLayoutEffect(() => {
         initSynth();
-        setTimeout(syncNodesToState, 0);
         // startAnalyser();
     }, []);
 
@@ -369,8 +330,51 @@ const PolySynth = ({ className, theme }) => {
         setEqHighFreq(preset.eqHighFreq);
 
         resetSynthPos();
-        setTimeout(syncNodesToState, 0);
     }, [currentPreset]);
+
+    // Sync node values to the current state on change
+    useLayoutEffect(() => {
+        if (masterGain.getGain() !== masterVolume) masterGain.setGain(masterVolume);
+
+        if (masterFilter.getType() !== masterFilterType) masterFilter.setType(masterFilterType);
+        if (masterFilter.getFreq() !== masterFilterFreq) masterFilter.setFreq(masterFilterFreq);
+        if (masterFilter.getQ() !== masterFilterQ) masterFilter.setQ(masterFilterQ);
+        if (masterFilter.getGain() !== masterFilterGain) masterFilter.setGain(masterFilterGain);
+
+        const synth1 = synthArr[0];
+        if (synth1.getWaveform() !== vcoType) synthArr.forEach((synth) => synth.setWaveform(vcoType));
+        if (synth1.getFilterType() !== filterType) synthArr.forEach((synth) => synth.setFilTypereq(filterType));
+        if (synth1.getFilterFreq() !== filterFreq) synthArr.forEach((synth) => synth.setFilterFreq(filterFreq));
+        if (synth1.getFilterQ() !== filterQ) synthArr.forEach((synth) => synth.setFilterQ(filterQ));
+        if (synth1.getFilterGain() !== filterGain) synthArr.forEach((synth) => synth.setFilGainreq(filterGain));
+
+        if (masterDistortion.getAmount() !== distortionAmount) masterDistortion.setAmount(distortionAmount);
+        if (masterDistortion.getDistortion() !== distortionDist) masterDistortion.setDistortion(distortionDist);
+
+        if (masterDelay.getTone() !== delayTone) masterDelay.setTone(delayTone);
+        if (masterDelay.getAmount() !== delayAmount) masterDelay.setAmount(delayAmount);
+        if (masterDelay.getDelayTime() !== delayTime) masterDelay.setDelayTime(delayTime);
+        if (masterDelay.getFeedback() !== delayFeedback) masterDelay.setFeedback(delayFeedback);
+
+        if (masterReverb.getAmount() !== reverbAmount) masterReverb.setAmount(reverbAmount);
+        if (masterReverb.getType() !== reverbType) masterReverb.setType(reverbType);
+
+        if (masterBitCrush.getBitDepth() !== bitCrushDepth) masterBitCrush.setBitDepth(bitCrushDepth);
+        if (masterBitCrush.getAmount() !== bitCrushAmount) masterBitCrush.setAmount(bitCrushAmount);
+
+        if (vibratoLFO.getRate() !== vibratoRate) vibratoLFO.setRate(vibratoRate);
+        if (vibratoLFO.getDepth() !== vibratoDepth) vibratoLFO.setDepth(vibratoDepth);
+
+        if (masterEQ2.getLowGain() !== eqLowGain) masterEQ2.setLowGain(eqLowGain);
+        if (masterEQ2.getHighGain() !== eqHighGain) masterEQ2.setHighGain(eqHighGain);
+        if (masterEQ2.getLowFreq() !== eqLowFreq) masterEQ2.setLowFreq(eqLowFreq);
+        if (masterEQ2.getHighFreq() !== eqHighFreq) masterEQ2.setHighFreq(eqHighFreq);
+    }, [
+        masterVolume, masterFilterType, masterFilterFreq, masterFilterQ, masterFilterGain, vcoType,
+        filterType, filterFreq, filterQ, filterGain, distortionAmount, distortionDist, reverbType,
+        reverbAmount, delayTime, delayFeedback, delayTone, delayAmount, vibratoDepth, vibratoRate,
+        bitCrushDepth, bitCrushAmount, eqLowGain, eqHighGain, eqLowFreq, eqHighFreq,
+    ]);
 
     // Needed to avoid stale hook state
     useEffect(() => {
@@ -392,10 +396,7 @@ const PolySynth = ({ className, theme }) => {
                         label="Waveform"
                         options={WAVEFORM}
                         value={vcoType}
-                        onUpdate={(val) => {
-                            setVcoType(val);
-                            synthArr.forEach(synth => synth.setWaveform(val));
-                        }}
+                        onUpdate={(val) => setVcoType(val)}
                     />
                     <Knob
                         label="Polyphony"
@@ -442,19 +443,13 @@ const PolySynth = ({ className, theme }) => {
                         label="Depth"
                         value={vibratoDepth}
                         modifier={200}
-                        onUpdate={(val) => {
-                            vibratoLFO.setDepth(val);
-                            setVibratoDepth(val);
-                        }}
+                        onUpdate={(val) => setVibratoDepth(val)}
                     />
                     <Knob
                         label="Rate"
                         value={vibratoRate}
                         modifier={50}
-                        onUpdate={(val) => {
-                            vibratoLFO.setRate(val);
-                            setVibratoRate(val);
-                        }}
+                        onUpdate={(val) => setVibratoRate(val)}
                     />
                 </Module>
 
@@ -463,18 +458,12 @@ const PolySynth = ({ className, theme }) => {
                         label="Distortion"
                         value={distortionDist}
                         modifier={30}
-                        onUpdate={(val) => {
-                            masterDistortion.setDistortion(val);
-                            setDistortionDist(val);
-                        }}
+                        onUpdate={(val) => setDistortionDist(val)}
                     />
                     <Knob
                         label="Dry/Wet"
                         value={distortionAmount}
-                        onUpdate={(val) => {
-                            masterDistortion.setAmount(val);
-                            setDistortionAmount(val);
-                        }}
+                        onUpdate={(val) => setDistortionAmount(val)}
                     />
                 </Module>
 
@@ -483,39 +472,27 @@ const PolySynth = ({ className, theme }) => {
                         label="Type"
                         options={FILTER}
                         value={filterType}
-                        onUpdate={(val) => {
-                            synthArr.forEach(synth => synth.setFilterType(val));
-                            setFilterType(val);
-                        }}
+                        onUpdate={(val) => setFilterType(val)}
                     />
                     <Knob
                         label="Cutoff"
                         value={filterFreq}
                         modifier={11000}
                         isRounded
-                        onUpdate={(val) => {
-                            synthArr.forEach(synth => synth.setFilterFreq(val));
-                            setFilterFreq(val);
-                        }}
+                        onUpdate={(val) => setFilterFreq(val)}
                     />
                     <Knob
                         label="Q"
                         value={filterQ}
                         modifier={20}
-                        onUpdate={(val) => {
-                            synthArr.forEach(synth => synth.setFilterQ(val));
-                            setFilterQ(val);
-                        }}
+                        onUpdate={(val) => setFilterQ(val)}
                     />
                     <Knob
                         label="Gain"
                         type="B"
                         value={filterGain}
                         modifier={40}
-                        onUpdate={(val) => {
-                            synthArr.forEach(synth => synth.setFilterGain(val));
-                            setFilterGain(val);
-                        }}
+                        onUpdate={(val) => setFilterGain(val)}
                     />
                     <Knob
                         label="Attack"
@@ -550,18 +527,12 @@ const PolySynth = ({ className, theme }) => {
                         label="Type"
                         options={REVERB}
                         value={reverbType}
-                        onUpdate={(val) => {
-                            masterReverb.setType(val);
-                            setReverbType(val);
-                        }}
+                        onUpdate={(val) => setReverbType(val)}
                     />
                     <Knob
                         label="Dry/Wet"
                         value={reverbAmount}
-                        onUpdate={(val) => {
-                            masterReverb.setAmount(val);
-                            setReverbAmount(val);
-                        }}
+                        onUpdate={(val) => setReverbAmount(val)}
                     />
                 </Module>
 
@@ -572,18 +543,12 @@ const PolySynth = ({ className, theme }) => {
                         modifier={14}
                         offset={2}
                         isRounded
-                        onUpdate={(val) => {
-                            masterBitCrush.setBitDepth(val);
-                            setBitCrushDepth(val);
-                        }}
+                        onUpdate={(val) => setBitCrushDepth(val)}
                     />
                     <Knob
                         label="Dry/Wet"
                         value={bitCrushAmount}
-                        onUpdate={(val) => {
-                            masterBitCrush.setAmount(val);
-                            setBitCrushAmount(val);
-                        }}
+                        onUpdate={(val) => setBitCrushAmount(val)}
                     />
                 </Module>
 
@@ -591,37 +556,24 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="Time"
                         value={delayTime}
-                        onUpdate={(val) => {
-                            console.log(val);
-                            masterDelay.setDelayTime(val);
-                            setDelayTime(val);
-                        }}
+                        onUpdate={(val) => setDelayTime(val)}
                     />
                     <Knob
                         label="Feedback"
                         value={delayFeedback}
-                        onUpdate={(val) => {
-                            masterDelay.setFeedback(val);
-                            setDelayFeedback(val);
-                        }}
+                        onUpdate={(val) => setDelayFeedback(val)}
                     />
                     <Knob
                         label="Tone"
                         value={delayTone}
                         modifier={11000}
                         isRounded
-                        onUpdate={(val) => {
-                            masterDelay.setTone(val);
-                            setDelayTone(val);
-                        }}
+                        onUpdate={(val) => setDelayTone(val)}
                     />
                     <Knob
                         label="Dry/Wet"
                         value={delayAmount}
-                        onUpdate={(val) => {
-                            masterDelay.setAmount(val);
-                            setDelayAmount(val);
-                        }}
+                        onUpdate={(val) => setDelayAmount(val)}
                     />
                 </Module>
 
@@ -631,20 +583,14 @@ const PolySynth = ({ className, theme }) => {
                         type="B"
                         modifier={24}
                         value={eqLowGain}
-                        onUpdate={(val) => {
-                            masterEQ2.setLowGain(val);
-                            setEqLowGain(val);
-                        }}
+                        onUpdate={(val) => setEqLowGain(val)}
                     />
                     <Knob
                         label="High"
                         type="B"
                         modifier={24}
                         value={eqHighGain}
-                        onUpdate={(val) => {
-                            masterEQ2.setHighGain(val);
-                            setEqHighGain(val);
-                        }}
+                        onUpdate={(val) => setEqHighGain(val)}
                     />
                 </Module>
 
@@ -653,39 +599,27 @@ const PolySynth = ({ className, theme }) => {
                         label="Type"
                         options={FILTER}
                         value={masterFilterType}
-                        onUpdate={(val) => {
-                            masterFilter.setType(val);
-                            setMasterFilterType(val);
-                        }}
+                        onUpdate={(val) => setMasterFilterType(val)}
                     />
                     <Knob
                         label="Cutoff"
                         value={masterFilterFreq}
                         modifier={11000}
                         isRounded
-                        onUpdate={(val) => {
-                            masterFilter.setFreq(val);
-                            setMasterFilterFreq(val);
-                        }}
+                        onUpdate={(val) => setMasterFilterFreq(val)}
                     />
                     <Knob
                         label="Q"
                         value={masterFilterQ}
                         modifier={20}
-                        onUpdate={(val) => {
-                            masterFilter.setQ(val);
-                            setMasterFilterQ(val);
-                        }}
+                        onUpdate={(val) => setMasterFilterQ(val)}
                     />
                     <Knob
                         label="Gain"
                         type="B"
                         value={masterFilterGain}
                         modifier={40}
-                        onUpdate={(val) => {
-                            masterFilter.setGain(val);
-                            setMasterFilterGain(val);
-                        }}
+                        onUpdate={(val) => setMasterFilterGain(val)}
                     />
                 </Module>
 

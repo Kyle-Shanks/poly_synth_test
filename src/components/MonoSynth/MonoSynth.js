@@ -37,7 +37,13 @@ class MonoSynth {
         this.timeoutIds.forEach((id) => clearTimeout(id));
     }
 
+    // Getters
     getNode = () => this.osc.getNode();
+    getWaveform = () => this.osc.getType();
+    getFilterType = () => this.filter.getType();
+    getFilterFreq = () => this.filter.getFreq();
+    getFilterQ = () => this.filter.getQ();
+    getFilterGain = () => this.filter.getGain();
 
     // Parameter setters
     setVolume = (val) => this.volume.setGain(clamp(val, 0, 1));
