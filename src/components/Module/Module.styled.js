@@ -44,6 +44,7 @@ export const Label = styled.h4`
     color: ${({ theme }) => theme.pop};
     padding: 0 ${SPACING.s} ${SPACING.xs};
     background-color: ${({theme}) => theme.background};
+    letter-spacing: 0.5px;
 `;
 
 export const Bolt = styled.div`

@@ -12,6 +12,7 @@ export const ComponentContainer = styled.div`
     ${relaInline}
     margin: 0 ${SPACING.s};
     vertical-align: top;
+    cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'default'};
 
     &:hover ${Label}, &:active ${Label} {
         & .label-text {
@@ -31,7 +32,7 @@ export const Label = styled.h2`
     font-size: 13px;
 
     & > * {
-        color: ${({ theme }) => theme.strong};
+        color: ${({ theme, disabled }) => disabled ? theme.mid : theme.strong};
     }
 
     & > .value-text {
@@ -44,6 +45,7 @@ export const KnobContainer = styled.div`
     ${relaInline}
     height: 5rem;
     width: 5rem;
+    pointer-events: ${({ disabled }) => disabled ? 'none' : 'all'};
 `;
 
 export const KnobSvg = styled.svg`
@@ -63,7 +65,7 @@ export const KnobDial = styled.div`
     ${absCenter}
     height: 3rem;
     width: 3rem;
-    border: ${borderWidthM} solid ${({ theme }) => theme.strong};
+    border: ${borderWidthM} solid ${({ theme, disabled }) => disabled ? theme.mid : theme.strong};
     border-radius: 100%;
     text-align: center;
     transition: 0s, border ${defaultTransition};
@@ -73,7 +75,8 @@ export const KnobDial = styled.div`
         position: absolute;
         height: 0.75rem;
         width: ${borderWidthM};
-        background-color: ${({ theme }) => theme.strong};
+        background-color: ${({ theme, disabled }) => disabled ? theme.mid : theme.strong};
+        transition: ${defaultTransition};
     }
 `;
 
@@ -82,5 +85,5 @@ export const BackgroundMeter = styled.path`
 `;
 
 export const ActiveMeter = styled.path`
-    stroke: ${({ theme }) => theme.strong};
+    stroke: ${({ theme, disabled }) => disabled ? theme.mid : theme.strong};
 `;

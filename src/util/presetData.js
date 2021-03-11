@@ -134,7 +134,7 @@ export default {
         filterFreq: 42,
         filterQ: 2.05,
         filterGain: 0,
-        filterAttack: 0.42,
+        filterAttack: 0.16,
         filterDecay: 0.53,
         filterRelease: 0.27,
         filterEnvAmount: 8417,

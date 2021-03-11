@@ -28,7 +28,7 @@ const typeInfo = {
 
 let currentY = 0;
 
-const Knob = ({ isRounded, label, modifier, offset, onUpdate, type, value }) => {
+const Knob = ({ disabled, isRounded, label, modifier, offset, onUpdate, type, value }) => {
     const getValueFromKnobRotation = (knobRotation) => {
         const val = (type === 'A')
             ? ((knobRotation + maxRotation) / (maxRotation * 2))
@@ -91,10 +91,11 @@ const Knob = ({ isRounded, label, modifier, offset, onUpdate, type, value }) => 
     }, [value])
 
     return (
-        <ComponentContainer className={`${BASE_CLASS_NAME}`}>
+        <ComponentContainer className={`${BASE_CLASS_NAME}`} disabled={disabled}>
             <KnobContainer
                 className={`${BASE_CLASS_NAME}__container`}
                 onMouseDown={handleMouseDown}
+                disabled={disabled}
             >
                 <KnobSvg className={`${BASE_CLASS_NAME}__svg`} viewBox="0 0 100 100">
                     <BackgroundMeter d="M20,76 A 40 40 0 1 1 80 76" />
@@ -102,14 +103,16 @@ const Knob = ({ isRounded, label, modifier, offset, onUpdate, type, value }) => 
                         d={typeInfo[type].path}
                         strokeDasharray={typeInfo[type].dashLength}
                         style={{ strokeDashoffset: getDashOffset(rotation, type) }}
+                        disabled={disabled}
                     />
                 </KnobSvg>
                 <KnobDial
                     className={`${BASE_CLASS_NAME}__dial`}
                     style={{ transform: `translate(-50%,-50%) rotate(${rotation}deg)` }}
+                    disabled={disabled}
                 />
             </KnobContainer>
-            <Label>
+            <Label disabled={disabled}>
                 <div className="label-text">{label}</div>
                 <div className="value-text">
                     {Math.round(getValueFromKnobRotation(rotation) * 100) / 100}
@@ -120,6 +123,7 @@ const Knob = ({ isRounded, label, modifier, offset, onUpdate, type, value }) => 
 };
 
 Knob.propTypes = {
+    disabled: PropTypes.bool,
     isRounded: PropTypes.bool,
     label: PropTypes.string.isRequired,
     // Defines the multiplier/max for the knob
@@ -133,6 +137,7 @@ Knob.propTypes = {
 };
 
 Knob.defaultProps = {
+    disabled: false,
     isRounded: false,
     modifier: 1,
     offset: 0,

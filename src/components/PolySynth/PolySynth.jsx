@@ -156,7 +156,14 @@ const PolySynth = ({ className, theme }) => {
     const synthNoteOn = (synth, note) => {
         const gainEnv = getGainEnv();
         const filterEnv = getFilterEnv();
-        synth.noteOn(note, { gainEnv, filterEnv, portamentoSpeed });
+        synth.noteOn(
+            note,
+            {
+                gainEnv,
+                filterEnv,
+                portamentoSpeed: polyphony === 1 ? portamentoSpeed : 0
+            },
+        );
     }
     const synthNoteOff = (synth) => {
         const gainEnv = getGainEnv();
@@ -391,23 +398,12 @@ const PolySynth = ({ className, theme }) => {
             </select>
 
             <ModuleGridContainer>
-                <Module label="VCO" columns={2} rows={1}>
+                <Module label="VCO" columns={1} rows={1}>
                     <Select
                         label="Waveform"
                         options={WAVEFORM}
                         value={vcoType}
                         onUpdate={(val) => setVcoType(val)}
-                    />
-                    <Knob
-                        label="Polyphony"
-                        value={polyphony}
-                        modifier={7}
-                        offset={1}
-                        isRounded
-                        onUpdate={(val) => {
-                            setPolyphony(val);
-                            resetSynthPos();
-                        }}
                     />
                 </Module>
 
@@ -620,6 +616,32 @@ const PolySynth = ({ className, theme }) => {
                         value={masterFilterGain}
                         modifier={40}
                         onUpdate={(val) => setMasterFilterGain(val)}
+                    />
+                </Module>
+
+                <Module label="Master" columns={2} rows={2}>
+                    <Knob
+                        label="Volume"
+                        value={masterVolume}
+                        onUpdate={(val) => setMasterVolume(val)}
+                    />
+                    <Knob
+                        label="Polyphony"
+                        value={polyphony}
+                        modifier={7}
+                        offset={1}
+                        isRounded
+                        onUpdate={(val) => {
+                            setPolyphony(val);
+                            resetSynthPos();
+                        }}
+                    />
+                    <Knob
+                        label="Portamento"
+                        value={portamentoSpeed}
+                        modifier={0.5}
+                        onUpdate={(val) => setPortamentoSpeed(val)}
+                        disabled={polyphony !== 1}
                     />
                 </Module>
 
