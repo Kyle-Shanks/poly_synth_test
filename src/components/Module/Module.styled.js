@@ -10,21 +10,20 @@ export const ComponentContainer = styled.div`
     background-color: ${({ theme }) => theme.background};
     width: fit-content;
 
-    &::before {
-        z-index: -1;
-        content: '';
-        position: absolute;
-        top: 1.25rem;
-        left: 1.25rem;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
+    // &::before {
+    //     z-index: -1;
+    //     content: '';
+    //     position: absolute;
+    //     top: 1.25rem;
+    //     left: 1.25rem;
+    //     height: 100%;
+    //     width: 100%;
+    //     overflow: hidden;
 
-        // Polkadot styles
-        background-image: radial-gradient(${({ theme }) => theme.strong} 1px, transparent 1px);
-        background-position: 0 0, 0.2rem 0.2rem;
-        background-size: 0.4rem 0.4rem;
-    }
+    //     // Polkadot styles
+    //     background-image: radial-gradient(${({ theme }) => theme.strong} 1px, transparent 1px);
+    //     background-size: 0.4rem 0.4rem;
+    // }
 `;
 
 export const GridContainer = styled.div`

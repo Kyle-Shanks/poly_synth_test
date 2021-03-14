@@ -7,7 +7,7 @@ import Knob from 'src/components/Knob';
 import Select from 'src/components/Select';
 import presetData from 'src/util/presetData';
 import { getNoteInfo, WAVEFORM, FILTER, REVERB } from 'src/util/util';
-import { ModuleGridContainer } from './PolySynth.styled';
+import { ModuleGridContainer, DotCircle, Lines } from './PolySynth.styled';
 
 const BASE_CLASS_NAME = 'PolySynth';
 
@@ -397,6 +397,8 @@ const PolySynth = ({ className, theme }) => {
                 ))}
             </select>
 
+            <p>Octave: {octaveMod}</p>
+
             <ModuleGridContainer>
                 <Module label="VCO" columns={1} rows={1}>
                     <Select
@@ -463,6 +465,61 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
+                <Module label="Delay" columns={4} rows={1}>
+                    <Knob
+                        label="Time"
+                        value={delayTime}
+                        onUpdate={(val) => setDelayTime(val)}
+                    />
+                    <Knob
+                        label="Feedback"
+                        value={delayFeedback}
+                        onUpdate={(val) => setDelayFeedback(val)}
+                    />
+                    <Knob
+                        label="Tone"
+                        value={delayTone}
+                        modifier={11000}
+                        isRounded
+                        onUpdate={(val) => setDelayTone(val)}
+                    />
+                    <Knob
+                        label="Dry/Wet"
+                        value={delayAmount}
+                        onUpdate={(val) => setDelayAmount(val)}
+                    />
+                </Module>
+
+                <Module label="Reverb" columns={2} rows={1}>
+                    <Select
+                        label="Type"
+                        options={REVERB}
+                        value={reverbType}
+                        onUpdate={(val) => setReverbType(val)}
+                    />
+                    <Knob
+                        label="Dry/Wet"
+                        value={reverbAmount}
+                        onUpdate={(val) => setReverbAmount(val)}
+                    />
+                </Module>
+
+                <Module label="Bit Crush" columns={2} rows={1}>
+                    <Knob
+                        label="Bit Depth"
+                        value={bitCrushDepth}
+                        modifier={14}
+                        offset={2}
+                        isRounded
+                        onUpdate={(val) => setBitCrushDepth(val)}
+                    />
+                    <Knob
+                        label="Dry/Wet"
+                        value={bitCrushAmount}
+                        onUpdate={(val) => setBitCrushAmount(val)}
+                    />
+                </Module>
+
                 <Module label="Filter" columns={4} rows={2}>
                     <Select
                         label="Type"
@@ -518,104 +575,35 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
-                <Module label="Reverb" columns={2} rows={1}>
-                    <Select
-                        label="Type"
-                        options={REVERB}
-                        value={reverbType}
-                        onUpdate={(val) => setReverbType(val)}
-                    />
-                    <Knob
-                        label="Dry/Wet"
-                        value={reverbAmount}
-                        onUpdate={(val) => setReverbAmount(val)}
-                    />
-                </Module>
-
-                <Module label="Bit Crush" columns={2} rows={1}>
-                    <Knob
-                        label="Bit Depth"
-                        value={bitCrushDepth}
-                        modifier={14}
-                        offset={2}
-                        isRounded
-                        onUpdate={(val) => setBitCrushDepth(val)}
-                    />
-                    <Knob
-                        label="Dry/Wet"
-                        value={bitCrushAmount}
-                        onUpdate={(val) => setBitCrushAmount(val)}
-                    />
-                </Module>
-
-                <Module label="Delay" columns={4} rows={1}>
-                    <Knob
-                        label="Time"
-                        value={delayTime}
-                        onUpdate={(val) => setDelayTime(val)}
-                    />
-                    <Knob
-                        label="Feedback"
-                        value={delayFeedback}
-                        onUpdate={(val) => setDelayFeedback(val)}
-                    />
-                    <Knob
-                        label="Tone"
-                        value={delayTone}
-                        modifier={11000}
-                        isRounded
-                        onUpdate={(val) => setDelayTone(val)}
-                    />
-                    <Knob
-                        label="Dry/Wet"
-                        value={delayAmount}
-                        onUpdate={(val) => setDelayAmount(val)}
-                    />
-                </Module>
-
                 <Module label="EQ2" columns={2} rows={1}>
                     <Knob
-                        label="Low"
+                        label="Low Gain"
                         type="B"
                         modifier={24}
                         value={eqLowGain}
                         onUpdate={(val) => setEqLowGain(val)}
                     />
                     <Knob
-                        label="High"
+                        label="High Gain"
                         type="B"
                         modifier={24}
                         value={eqHighGain}
                         onUpdate={(val) => setEqHighGain(val)}
                     />
-                </Module>
-
-                <Module label="Master Filter" columns={2} rows={2}>
-                    <Select
-                        label="Type"
-                        options={FILTER}
-                        value={masterFilterType}
-                        onUpdate={(val) => setMasterFilterType(val)}
-                    />
                     <Knob
-                        label="Cutoff"
-                        value={masterFilterFreq}
-                        modifier={11000}
+                        label="Low Freq"
+                        modifier={640}
                         isRounded
-                        onUpdate={(val) => setMasterFilterFreq(val)}
+                        value={eqLowFreq}
+                        onUpdate={(val) => setEqLowFreq(val)}
                     />
                     <Knob
-                        label="Q"
-                        value={masterFilterQ}
-                        modifier={20}
-                        onUpdate={(val) => setMasterFilterQ(val)}
-                    />
-                    <Knob
-                        label="Gain"
-                        type="B"
-                        value={masterFilterGain}
-                        modifier={40}
-                        onUpdate={(val) => setMasterFilterGain(val)}
+                        label="High Freq"
+                        modifier={8600}
+                        offset={2400}
+                        isRounded
+                        value={eqHighFreq}
+                        onUpdate={(val) => setEqHighFreq(val)}
                     />
                 </Module>
 
@@ -644,6 +632,41 @@ const PolySynth = ({ className, theme }) => {
                         disabled={polyphony !== 1}
                     />
                 </Module>
+
+                <Module label="Master Filter" columns={4} rows={1}>
+                    <Select
+                        label="Type"
+                        options={FILTER}
+                        value={masterFilterType}
+                        onUpdate={(val) => setMasterFilterType(val)}
+                    />
+                    <Knob
+                        label="Cutoff"
+                        value={masterFilterFreq}
+                        modifier={11000}
+                        isRounded
+                        onUpdate={(val) => setMasterFilterFreq(val)}
+                    />
+                    <Knob
+                        label="Q"
+                        value={masterFilterQ}
+                        modifier={20}
+                        onUpdate={(val) => setMasterFilterQ(val)}
+                    />
+                    <Knob
+                        label="Gain"
+                        type="B"
+                        value={masterFilterGain}
+                        modifier={40}
+                        onUpdate={(val) => setMasterFilterGain(val)}
+                    />
+                </Module>
+
+                <DotCircle />
+
+                <Lines />
+                <div />
+                <Lines />
 
             </ModuleGridContainer>
 
