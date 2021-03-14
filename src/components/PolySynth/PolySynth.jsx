@@ -480,6 +480,7 @@ const PolySynth = ({ className, theme }) => {
                         label="Tone"
                         value={delayTone}
                         modifier={11000}
+                        resetValue={4400}
                         isRounded
                         onUpdate={(val) => setDelayTone(val)}
                     />
@@ -509,6 +510,7 @@ const PolySynth = ({ className, theme }) => {
                         label="Bit Depth"
                         value={bitCrushDepth}
                         modifier={14}
+                        resetValue={8}
                         offset={2}
                         isRounded
                         onUpdate={(val) => setBitCrushDepth(val)}
@@ -531,6 +533,7 @@ const PolySynth = ({ className, theme }) => {
                         label="Cutoff"
                         value={filterFreq}
                         modifier={11000}
+                        resetValue={6000}
                         isRounded
                         onUpdate={(val) => setFilterFreq(val)}
                     />
@@ -593,6 +596,7 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="Low Freq"
                         modifier={640}
+                        resetValue={320}
                         isRounded
                         value={eqLowFreq}
                         onUpdate={(val) => setEqLowFreq(val)}
@@ -600,6 +604,7 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="High Freq"
                         modifier={8600}
+                        resetValue={3200}
                         offset={2400}
                         isRounded
                         value={eqHighFreq}
@@ -618,6 +623,7 @@ const PolySynth = ({ className, theme }) => {
                         value={polyphony}
                         modifier={7}
                         offset={1}
+                        resetValue={8}
                         isRounded
                         onUpdate={(val) => {
                             setPolyphony(val);
@@ -644,6 +650,7 @@ const PolySynth = ({ className, theme }) => {
                         label="Cutoff"
                         value={masterFilterFreq}
                         modifier={11000}
+                        resetValue={11000}
                         isRounded
                         onUpdate={(val) => setMasterFilterFreq(val)}
                     />

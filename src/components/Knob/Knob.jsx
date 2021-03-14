@@ -28,7 +28,7 @@ const typeInfo = {
 
 let currentY = 0;
 
-const Knob = ({ disabled, isRounded, label, modifier, offset, onUpdate, type, value }) => {
+const Knob = ({ disabled, isRounded, label, modifier, offset, onUpdate, type, resetValue, value }) => {
     const getValueFromKnobRotation = (knobRotation) => {
         const val = (type === 'A')
             ? ((knobRotation + maxRotation) / (maxRotation * 2))
@@ -76,6 +76,8 @@ const Knob = ({ disabled, isRounded, label, modifier, offset, onUpdate, type, va
         window.addEventListener('mouseup', handleMouseUp);
     }
 
+    const handleReset = () => onUpdate(resetValue);
+
     const getDashOffset = (rotation, type) => (
         typeInfo[type].dashLength - (184 / (maxRotation * 2)) * (rotation + typeInfo[type].offset)
     );
@@ -95,6 +97,7 @@ const Knob = ({ disabled, isRounded, label, modifier, offset, onUpdate, type, va
             <KnobContainer
                 className={`${BASE_CLASS_NAME}__container`}
                 onMouseDown={handleMouseDown}
+                onDoubleClick={handleReset}
                 disabled={disabled}
             >
                 <KnobSvg className={`${BASE_CLASS_NAME}__svg`} viewBox="0 0 100 100">
@@ -133,6 +136,7 @@ Knob.propTypes = {
     onUpdate: PropTypes.func,
     // Defines if it is a one way or two way knob
     type: PropTypes.oneOf(['A', 'B']),
+    resetValue: PropTypes.number,
     value: PropTypes.number,
 };
 
@@ -143,6 +147,7 @@ Knob.defaultProps = {
     offset: 0,
     onUpdate: () => {},
     type: 'A',
+    resetValue: 0,
     value: 0,
 };
 
