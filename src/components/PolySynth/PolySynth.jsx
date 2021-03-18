@@ -54,7 +54,7 @@ const PolySynth = ({ className, theme }) => {
 
     // Synth State
     const [synthActive, setSynthActive] = useState(false);
-    const [octaveMod, setOctaveMod] = useState(3);
+    const [octaveMod, setOctaveMod] = useState(4);
     const [currentPreset, setCurrentPreset] = useState('- INIT -');
 
     // Preset State
@@ -95,8 +95,8 @@ const PolySynth = ({ className, theme }) => {
     const [eqLowFreq, setEqLowFreq] = useState(320);
     const [eqHighFreq, setEqHighFreq] = useState(3200);
 
-    const octaveUp = () => { if (octaveMod < 6) setOctaveMod(octaveMod + 1) };
-    const octaveDown = () => { if (octaveMod > 0) setOctaveMod(octaveMod - 1) };
+    const octaveUp = () => { if (octaveMod < 7) setOctaveMod(octaveMod + 1) };
+    const octaveDown = () => { if (octaveMod > 1) setOctaveMod(octaveMod - 1) };
 
     const resetSynthPos = () => synthPos = 0;
     const incrementSynthPos = () => synthPos = (synthPos + 1) % polyphony;
@@ -350,10 +350,10 @@ const PolySynth = ({ className, theme }) => {
 
         const synth1 = synthArr[0];
         if (synth1.getWaveform() !== vcoType) synthArr.forEach((synth) => synth.setWaveform(vcoType));
-        if (synth1.getFilterType() !== filterType) synthArr.forEach((synth) => synth.setFilTypereq(filterType));
+        if (synth1.getFilterType() !== filterType) synthArr.forEach((synth) => synth.setFilterType(filterType));
         if (synth1.getFilterFreq() !== filterFreq) synthArr.forEach((synth) => synth.setFilterFreq(filterFreq));
         if (synth1.getFilterQ() !== filterQ) synthArr.forEach((synth) => synth.setFilterQ(filterQ));
-        if (synth1.getFilterGain() !== filterGain) synthArr.forEach((synth) => synth.setFilGainreq(filterGain));
+        if (synth1.getFilterGain() !== filterGain) synthArr.forEach((synth) => synth.setFilterGain(filterGain));
 
         if (masterDistortion.getAmount() !== distortionAmount) masterDistortion.setAmount(distortionAmount);
         if (masterDistortion.getDistortion() !== distortionDist) masterDistortion.setDistortion(distortionDist);
@@ -400,6 +400,7 @@ const PolySynth = ({ className, theme }) => {
             <p>Octave: {octaveMod}</p>
 
             <ModuleGridContainer>
+
                 <Module label="VCO" columns={1} rows={1}>
                     <Select
                         label="Waveform"

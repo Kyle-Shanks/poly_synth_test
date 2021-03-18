@@ -10,13 +10,13 @@ class Delay {
         this.wetGain = new Gain(this.AC);
 
         this.delay = this.AC.createDelay();
-        this.tone = new Filter(this.AC);
         this.feedbackGain = new Gain(this.AC);
+        this.tone = new Filter(this.AC);
 
-        this.tone.connect(this.delay);
         this.delay.connect(this.feedbackGain.getNode());
-        this.feedbackGain.connect(this.wetGain.getNode());
+        this.feedbackGain.connect(this.tone.getNode());
         this.feedbackGain.connect(this.delay);
+        this.tone.connect(this.wetGain.getNode());
 
         this.amount = 0;
 
@@ -37,7 +37,7 @@ class Delay {
     }
 
     // Getters
-    getNode = () => [this.dryGain.getNode(), this.tone.getNode()];
+    getNode = () => [this.dryGain.getNode(), this.delay];
     getAmount = () => this.amount;
     getDelayTime = () => this.delay.delayTime.value;
     getTone = () => this.tone.getFreq();

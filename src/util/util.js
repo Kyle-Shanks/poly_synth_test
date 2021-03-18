@@ -23,7 +23,7 @@ const noteMap = {
     ';': 'E1',
 };
 
-// Frequency of 3rd octave
+// Frequency of 4th octave
 const freqMap = {
     'C': 261.63,
     'C#': 277.18,
@@ -40,13 +40,13 @@ const freqMap = {
 };
 
 // Gets the note info based on the key pressed and octaveMod
-export const getNoteInfo = (key, octaveMod = 3) => {
+export const getNoteInfo = (key, octaveMod = 4) => {
     const noteInfo = noteMap[key];
     if (!noteInfo) return false;
 
     const note = noteInfo.slice(0, -1);
     const oct = parseInt(noteInfo.slice(-1)) + octaveMod;
-    const freq = freqMap[note] * Math.pow(2, oct - 3);
+    const freq = freqMap[note] * Math.pow(2, oct - 4);
 
     return { note: `${note}${oct}`, oct, freq };
 };
@@ -64,7 +64,6 @@ export const FILTER = {
     highpass: 'M 40 22 L 24 22 L 19 16 L 10 34',
     bandpass: 'M 10 34 L 15 34 L 21 16 L 29 16 L 35 34 L 40 34',
     notch: 'M 10 16 L 15 16 L 21 34 L 29 34 L 35 16 L 40 16',
-    // Need to add the filter gain knob if these are used
     // lowshelf: 'M 10 34 L 20 34 L 30 16 L 40 16',
     // highshelf: 'M 10 16 L 20 16 L 30 34 L 40 34',
 };
