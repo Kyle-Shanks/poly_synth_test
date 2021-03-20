@@ -3,6 +3,7 @@ import Filter from './filter';
 import Oscillator from './oscillator';
 import Reverb from './reverb';
 import Delay from './delay';
+import PingPongDelay from './pingPongDelay';
 import Distortion from './distortion';
 import LFO from './lfo';
 import EQ2 from './eq2';
@@ -18,6 +19,7 @@ export {
     Oscillator,
     Reverb,
     Delay,
+    PingPongDelay,
     Distortion,
     LFO,
     BitCrusher,

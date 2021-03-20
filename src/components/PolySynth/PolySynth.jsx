@@ -23,6 +23,7 @@ const masterGain = new Nodes.Gain(AC);
 const masterFilter = new Nodes.Filter(AC);
 const masterDistortion = new Nodes.Distortion(AC);
 const masterDelay = new Nodes.Delay(AC);
+const masterPingPong = new Nodes.PingPongDelay(AC);
 const masterReverb = new Nodes.Reverb(AC);
 const vibratoLFO = new Nodes.LFO(AC);
 const masterBitCrush = new Nodes.BitCrusher(AC);
@@ -38,6 +39,7 @@ const getNodes = () => ({
     masterFilter,
     masterDistortion,
     masterDelay,
+    masterPingPong,
     masterReverb,
     vibratoLFO,
     masterBitCrush,
@@ -86,6 +88,10 @@ const PolySynth = ({ className, theme }) => {
     const [delayFeedback, setDelayFeedback] = useState(0);
     const [delayTone, setDelayTone] = useState(4400);
     const [delayAmount, setDelayAmount] = useState(0);
+    const [pingPongDelayTime, setPingPongDelayTime] = useState(0);
+    const [pingPongFeedback, setPingPongFeedback] = useState(0);
+    const [pingPongTone, setPingPongTone] = useState(4400);
+    const [pingPongAmount, setPingPongAmount] = useState(0);
     const [vibratoDepth, setVibratoDepth] = useState(0);
     const [vibratoRate, setVibratoRate] = useState(0);
     const [bitCrushDepth, setBitCrushDepth] = useState(8);
@@ -123,7 +129,8 @@ const PolySynth = ({ className, theme }) => {
         synthMix.setRatio(20);
 
         masterDistortion.connect(masterDelay.getNode());
-        masterDelay.connect(masterBitCrush.getNode());
+        masterDelay.connect(masterPingPong.getNode());
+        masterPingPong.connect(masterBitCrush.getNode());
         masterBitCrush.connect(masterReverb.getNode());
         masterReverb.connect(masterEQ2.getNode());
         masterEQ2.connect(masterFilter.getNode());
@@ -325,6 +332,10 @@ const PolySynth = ({ className, theme }) => {
         setDelayFeedback(preset.delayFeedback);
         setDelayTime(preset.delayTime);
         setDelayTone(preset.delayTone);
+        setPingPongAmount(preset.pingPongAmount);
+        setPingPongDelayTime(preset.pingPongDelayTime);
+        setPingPongTone(preset.pingPongTone);
+        setPingPongFeedback(preset.pingPongFeedback);
         setReverbType(preset.reverbType);
         setReverbAmount(preset.reverbAmount);
         setVibratoDepth(preset.vibratoDepth);
@@ -363,6 +374,11 @@ const PolySynth = ({ className, theme }) => {
         if (masterDelay.getDelayTime() !== delayTime) masterDelay.setDelayTime(delayTime);
         if (masterDelay.getFeedback() !== delayFeedback) masterDelay.setFeedback(delayFeedback);
 
+        if (masterPingPong.getDelayTime() !== pingPongDelayTime) masterPingPong.setDelayTime(pingPongDelayTime);
+        if (masterPingPong.getFeedback() !== pingPongFeedback) masterPingPong.setFeedback(pingPongFeedback);
+        if (masterPingPong.getTone() !== pingPongTone) masterPingPong.setTone(pingPongTone);
+        if (masterPingPong.getAmount() !== pingPongAmount) masterPingPong.setAmount(pingPongAmount);
+
         if (masterReverb.getAmount() !== reverbAmount) masterReverb.setAmount(reverbAmount);
         if (masterReverb.getType() !== reverbType) masterReverb.setType(reverbType);
 
@@ -381,6 +397,7 @@ const PolySynth = ({ className, theme }) => {
         filterType, filterFreq, filterQ, filterGain, distortionAmount, distortionDist, reverbType,
         reverbAmount, delayTime, delayFeedback, delayTone, delayAmount, vibratoDepth, vibratoRate,
         bitCrushDepth, bitCrushAmount, eqLowGain, eqHighGain, eqLowFreq, eqHighFreq,
+        pingPongAmount, pingPongFeedback, pingPongDelayTime, pingPongTone,
     ]);
 
     // Needed to avoid stale hook state
@@ -671,6 +688,35 @@ const PolySynth = ({ className, theme }) => {
                 </Module>
 
                 <DotCircle />
+
+                <Module label="Ping Pong Delay" columns={2} rows={2}>
+                    <Knob
+                        label="Time"
+                        value={pingPongDelayTime}
+                        onUpdate={(val) => setPingPongDelayTime(val)}
+                    />
+                    <Knob
+                        label="Feedback"
+                        value={pingPongFeedback}
+                        onUpdate={(val) => setPingPongFeedback(val)}
+                    />
+                    <Knob
+                        label="Tone"
+                        value={pingPongTone}
+                        modifier={11000}
+                        resetValue={4400}
+                        isRounded
+                        onUpdate={(val) => setPingPongTone(val)}
+                    />
+                    <Knob
+                        label="Dry/Wet"
+                        value={pingPongAmount}
+                        onUpdate={(val) => setPingPongAmount(val)}
+                    />
+                </Module>
+
+                <div />
+                <div />
 
                 <Lines />
                 <div />
