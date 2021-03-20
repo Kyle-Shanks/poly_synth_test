@@ -22,6 +22,7 @@ const synthMix = new Nodes.Compressor(AC);
 const masterGain = new Nodes.Gain(AC);
 const masterFilter = new Nodes.Filter(AC);
 const masterDistortion = new Nodes.Distortion(AC);
+const masterFlanger = new Nodes.Flanger(AC);
 const masterDelay = new Nodes.Delay(AC);
 const masterPingPong = new Nodes.PingPongDelay(AC);
 const masterReverb = new Nodes.Reverb(AC);
@@ -38,6 +39,7 @@ const getNodes = () => ({
     masterGain,
     masterFilter,
     masterDistortion,
+    masterFlanger,
     masterDelay,
     masterPingPong,
     masterReverb,
@@ -84,6 +86,11 @@ const PolySynth = ({ className, theme }) => {
     const [distortionDist, setDistortionDist] = useState(0);
     const [reverbType, setReverbType] = useState('reverb1');
     const [reverbAmount, setReverbAmount] = useState(0);
+    const [flangerAmount, setFlangerAmount] = useState(0);
+    const [flangerDepth, setFlangerDepth] = useState(0);
+    const [flangerRate, setFlangerRate] = useState(0);
+    const [flangerFeedback, setFlangerFeedback] = useState(0);
+    const [flangerDelay, setFlangerDelay] = useState(0);
     const [delayTime, setDelayTime] = useState(0);
     const [delayFeedback, setDelayFeedback] = useState(0);
     const [delayTone, setDelayTone] = useState(4400);
@@ -128,7 +135,8 @@ const PolySynth = ({ className, theme }) => {
         synthMix.setKnee(0);
         synthMix.setRatio(20);
 
-        masterDistortion.connect(masterDelay.getNode());
+        masterDistortion.connect(masterFlanger.getNode());
+        masterFlanger.connect(masterDelay.getNode());
         masterDelay.connect(masterPingPong.getNode());
         masterPingPong.connect(masterBitCrush.getNode());
         masterBitCrush.connect(masterReverb.getNode());
@@ -328,6 +336,11 @@ const PolySynth = ({ className, theme }) => {
         setFilterEnvAmount(preset.filterEnvAmount);
         setDistortionAmount(preset.distortionAmount);
         setDistortionDist(preset.distortionDist);
+        setFlangerAmount(preset.flangerAmount);
+        setFlangerDepth(preset.flangerDepth);
+        setFlangerRate(preset.flangerRate);
+        setFlangerDelay(preset.flangerDelay);
+        setFlangerFeedback(preset.flangerFeedback);
         setDelayAmount(preset.delayAmount);
         setDelayFeedback(preset.delayFeedback);
         setDelayTime(preset.delayTime);
@@ -369,6 +382,12 @@ const PolySynth = ({ className, theme }) => {
         if (masterDistortion.getAmount() !== distortionAmount) masterDistortion.setAmount(distortionAmount);
         if (masterDistortion.getDistortion() !== distortionDist) masterDistortion.setDistortion(distortionDist);
 
+        if (masterFlanger.getAmount() !== flangerAmount) masterFlanger.setAmount(flangerAmount);
+        if (masterFlanger.getDepth() !== flangerDepth) masterFlanger.setDepth(flangerDepth);
+        if (masterFlanger.getRate() !== flangerRate) masterFlanger.setRate(flangerRate);
+        if (masterFlanger.getFeedback() !== flangerFeedback) masterFlanger.setFeedback(flangerFeedback);
+        if (masterFlanger.getDelay() !== flangerDelay) masterFlanger.setDelay(flangerDelay);
+
         if (masterDelay.getTone() !== delayTone) masterDelay.setTone(delayTone);
         if (masterDelay.getAmount() !== delayAmount) masterDelay.setAmount(delayAmount);
         if (masterDelay.getDelayTime() !== delayTime) masterDelay.setDelayTime(delayTime);
@@ -398,6 +417,7 @@ const PolySynth = ({ className, theme }) => {
         reverbAmount, delayTime, delayFeedback, delayTone, delayAmount, vibratoDepth, vibratoRate,
         bitCrushDepth, bitCrushAmount, eqLowGain, eqHighGain, eqLowFreq, eqHighFreq,
         pingPongAmount, pingPongFeedback, pingPongDelayTime, pingPongTone,
+        flangerAmount, flangerDelay, flangerDepth, flangerFeedback, flangerRate,
     ]);
 
     // Needed to avoid stale hook state
@@ -712,6 +732,43 @@ const PolySynth = ({ className, theme }) => {
                         disabled={polyphony !== 1}
                     />
                 </Module>
+
+                <div />
+                <Module label="Flanger" columns={4} rows={2}>
+                    <Knob
+                        label="Delay"
+                        value={flangerDelay}
+                        modifier={0.015}
+                        offset={0.005}
+                        resetValue={0.01}
+                        isRaw
+                        onUpdate={(val) => setFlangerDelay(val)}
+                    />
+                    <Knob
+                        label="Depth"
+                        value={flangerDepth}
+                        isRaw
+                        modifier={0.005}
+                        onUpdate={(val) => setFlangerDepth(val)}
+                    />
+                    <Knob
+                        label="Rate"
+                        value={flangerRate}
+                        modifier={2}
+                        onUpdate={(val) => setFlangerRate(val)}
+                    />
+                    <Knob
+                        label="Feedback"
+                        value={flangerFeedback}
+                        onUpdate={(val) => setFlangerFeedback(val)}
+                    />
+                    <Knob
+                        label="Dry/Wet"
+                        value={flangerAmount}
+                        onUpdate={(val) => setFlangerAmount(val)}
+                    />
+                </Module>
+                <div />
 
                 <Lines />
                 <Lines />

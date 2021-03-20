@@ -10,6 +10,7 @@ import EQ2 from './eq2';
 import BitCrusher from './bitcrusher';
 import Compressor from './compressor';
 import StereoPanner from './stereoPanner';
+import Flanger from './flanger';
 
 export {
     Compressor,
@@ -23,5 +24,6 @@ export {
     Distortion,
     LFO,
     BitCrusher,
-    StereoPanner
+    StereoPanner,
+    Flanger,
 };
