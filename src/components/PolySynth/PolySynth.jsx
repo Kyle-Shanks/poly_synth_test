@@ -741,13 +741,11 @@ const PolySynth = ({ className, theme }) => {
                         modifier={0.015}
                         offset={0.005}
                         resetValue={0.01}
-                        isRaw
                         onUpdate={(val) => setFlangerDelay(val)}
                     />
                     <Knob
                         label="Depth"
                         value={flangerDepth}
-                        isRaw
                         modifier={0.005}
                         onUpdate={(val) => setFlangerDepth(val)}
                     />
