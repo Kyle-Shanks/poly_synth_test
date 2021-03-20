@@ -630,30 +630,29 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
-                <Module label="Master" columns={2} rows={2}>
+                <Module label="Ping Pong Delay" columns={2} rows={2}>
                     <Knob
-                        label="Volume"
-                        value={masterVolume}
-                        onUpdate={(val) => setMasterVolume(val)}
+                        label="Time"
+                        value={pingPongDelayTime}
+                        onUpdate={(val) => setPingPongDelayTime(val)}
                     />
                     <Knob
-                        label="Polyphony"
-                        value={polyphony}
-                        modifier={7}
-                        offset={1}
-                        resetValue={8}
+                        label="Feedback"
+                        value={pingPongFeedback}
+                        onUpdate={(val) => setPingPongFeedback(val)}
+                    />
+                    <Knob
+                        label="Tone"
+                        value={pingPongTone}
+                        modifier={11000}
+                        resetValue={4400}
                         isRounded
-                        onUpdate={(val) => {
-                            setPolyphony(val);
-                            resetSynthPos();
-                        }}
+                        onUpdate={(val) => setPingPongTone(val)}
                     />
                     <Knob
-                        label="Portamento"
-                        value={portamentoSpeed}
-                        modifier={0.5}
-                        onUpdate={(val) => setPortamentoSpeed(val)}
-                        disabled={polyphony !== 1}
+                        label="Dry/Wet"
+                        value={pingPongAmount}
+                        onUpdate={(val) => setPingPongAmount(val)}
                     />
                 </Module>
 
@@ -687,40 +686,36 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
-                <DotCircle />
-
-                <Module label="Ping Pong Delay" columns={2} rows={2}>
+                <Module label="Master" columns={2} rows={2}>
                     <Knob
-                        label="Time"
-                        value={pingPongDelayTime}
-                        onUpdate={(val) => setPingPongDelayTime(val)}
+                        label="Volume"
+                        value={masterVolume}
+                        onUpdate={(val) => setMasterVolume(val)}
                     />
                     <Knob
-                        label="Feedback"
-                        value={pingPongFeedback}
-                        onUpdate={(val) => setPingPongFeedback(val)}
-                    />
-                    <Knob
-                        label="Tone"
-                        value={pingPongTone}
-                        modifier={11000}
-                        resetValue={4400}
+                        label="Polyphony"
+                        value={polyphony}
+                        modifier={7}
+                        offset={1}
+                        resetValue={8}
                         isRounded
-                        onUpdate={(val) => setPingPongTone(val)}
+                        onUpdate={(val) => {
+                            setPolyphony(val);
+                            resetSynthPos();
+                        }}
                     />
                     <Knob
-                        label="Dry/Wet"
-                        value={pingPongAmount}
-                        onUpdate={(val) => setPingPongAmount(val)}
+                        label="Portamento"
+                        value={portamentoSpeed}
+                        modifier={0.5}
+                        onUpdate={(val) => setPortamentoSpeed(val)}
+                        disabled={polyphony !== 1}
                     />
                 </Module>
 
-                <div />
-                <div />
-
                 <Lines />
-                <div />
                 <Lines />
+                <DotCircle />
 
             </ModuleGridContainer>
 
