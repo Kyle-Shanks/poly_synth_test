@@ -28,7 +28,18 @@ const typeInfo = {
 
 let currentY = 0;
 
-const Knob = ({ disabled, isRounded, label, modifier, offset, onUpdate, type, resetValue, value }) => {
+const Knob = ({
+    disabled,
+    isRounded,
+    decimalPlaces,
+    label,
+    modifier,
+    offset,
+    onUpdate,
+    type,
+    resetValue,
+    value,
+}) => {
     const getValueFromKnobRotation = (knobRotation) => {
         const val = (type === 'A')
             ? ((knobRotation + maxRotation) / (maxRotation * 2))
@@ -118,7 +129,7 @@ const Knob = ({ disabled, isRounded, label, modifier, offset, onUpdate, type, re
             <Label disabled={disabled}>
                 <div className="label-text">{label}</div>
                 <div className="value-text">
-                    {Math.round(getValueFromKnobRotation(rotation) * 100000) / 100000}
+                    {Math.round(getValueFromKnobRotation(rotation) * (10 ** decimalPlaces)) / (10 ** decimalPlaces)}
                 </div>
             </Label>
         </ComponentContainer>
@@ -128,6 +139,7 @@ const Knob = ({ disabled, isRounded, label, modifier, offset, onUpdate, type, re
 Knob.propTypes = {
     disabled: PropTypes.bool,
     isRounded: PropTypes.bool,
+    decimalPlaces: PropTypes.number,
     label: PropTypes.string.isRequired,
     // Defines the multiplier/max for the knob
     modifier: PropTypes.number,
@@ -143,6 +155,7 @@ Knob.propTypes = {
 Knob.defaultProps = {
     disabled: false,
     isRounded: false,
+    decimalPlaces: 2,
     modifier: 1,
     offset: 0,
     onUpdate: () => {},

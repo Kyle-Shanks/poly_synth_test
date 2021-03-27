@@ -49,7 +49,7 @@ export const KnobContainer = styled.div`
 `;
 
 export const KnobSvg = styled.svg`
-    ${vertCenter}
+    ${absCenter}
     height: 5rem;
     width: 5rem;
     & path {
@@ -59,6 +59,14 @@ export const KnobSvg = styled.svg`
         will-change: stroke-dashoffset;
         transition: 0.3s cubic-bezier(0, 0, 0.24, 1);
     }
+`;
+
+export const BackgroundMeter = styled.path`
+    stroke: ${({ theme }) => theme.lite};
+`;
+
+export const ActiveMeter = styled.path`
+    stroke: ${({ theme, disabled }) => disabled ? theme.mid : theme.strong};
 `;
 
 export const KnobDial = styled.div`
@@ -78,12 +86,4 @@ export const KnobDial = styled.div`
         background-color: ${({ theme, disabled }) => disabled ? theme.mid : theme.strong};
         transition: ${defaultTransition};
     }
-`;
-
-export const BackgroundMeter = styled.path`
-    stroke: ${({ theme }) => theme.lite};
-`;
-
-export const ActiveMeter = styled.path`
-    stroke: ${({ theme, disabled }) => disabled ? theme.mid : theme.strong};
 `;

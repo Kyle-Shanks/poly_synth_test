@@ -112,63 +112,8 @@ class MonoSynth {
         this.clearTimeouts();
         this.currentNote = null;
         this.gain.setGain(0, minTime);
-        this.filter.setDetune(0, 0);
+        this.filter.setDetune(0, minTime);
     }
 }
 
 export default MonoSynth;
-
-/*
-    this.analyserNode = this.AC.createAnalyser();
-    this.analyserNode.fftSize = 2048;
-
-    // Portamento
-    setPortamento = (val) => {
-        if (val === undefined) return;
-        this.portamento = clamp(val, 0, 1);
-    }
-
-    // Gain env
-    setAttack = (val) => {
-        if (val === undefined) return;
-        this.gainEnv.a = clamp(val, 0.01, 3);
-    }
-    setDecay = (val) => {
-        if (val === undefined) return;
-        this.gainEnv.d = clamp(val, 0.01, 3);
-    }
-    setSustain = (val) => {
-        if (val === undefined) return;
-        this.gainEnv.s = clamp(val, 0, 1);
-    }
-    setRelease = (val) => {
-        if (val === undefined) return;
-        this.gainEnv.r = clamp(val, 0.01, 3);
-    }
-
-    // Vibrato methods
-    setVibratoRate = (rate) => { this.vibrato.setRate(rate); }
-    setVibratoDepth = (depth) => { this.vibrato.setDepth(depth); }
-    setVibratoWaveform = (type) => { this.vibrato.setType(type); }
-
-    // Delay methods
-    setDelayAmount = (val) => { this.delay.setAmount(clamp(val, 0, 1)); }
-    setDelayTone = (tone) => { this.delay.setTone(tone); }
-    setDelayTime = (time) => { this.delay.setDelayTime(time); }
-    setDelayFeedback = (val) => { this.delay.setFeedback(val); }
-
-    // Distortion methods
-    setDistortionCurve = (dist) => { this.distortion.setDistortion(dist); }
-    setDistortionAmount = (val) => { this.distortion.setAmount(clamp(val, 0, 1)); }
-
-    // Filter methods
-    setFilterType = (type) => { this.filter.setType(type); }
-    setFilterFreq = (freq) => { this.filter.setFreq(freq); }
-
-    // Reverb methods
-    setReverbAmount = (val) => { this.reverb.setAmount(clamp(val, 0, 1)); }
-
-    // Bit Crusher methods
-    setBitCrusherDepth = (depth) => { this.bitcrusher.setBitDepth(clamp(depth, 1, 16)); }
-    setBitCrusherAmount = (val) => { this.bitcrusher.setAmount(clamp(val, 0, 1)); }
-*/

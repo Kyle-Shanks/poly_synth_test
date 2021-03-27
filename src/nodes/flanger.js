@@ -53,13 +53,8 @@ class Flanger {
     // Setters
     setAmount = (val) => {
         this.amount = val;
-        if (val < 0.5) {
-            this.dryGain.setGain(1);
-            this.wetGain.setGain(val * 2);
-        } else {
-            this.dryGain.setGain(1 - ((val - 0.5) * 2));
-            this.wetGain.setGain(1);
-        }
+        this.dryGain.setGain(1 - val);
+        this.wetGain.setGain(val);
     }
     setFeedback = (val) => this.feedback.setGain(val);
     setRate = (val) => this.lfo.setRate(val);

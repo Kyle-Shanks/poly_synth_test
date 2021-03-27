@@ -136,10 +136,10 @@ const PolySynth = ({ className, theme }) => {
         synthMix.setRatio(20);
 
         masterDistortion.connect(masterFlanger.getNode());
-        masterFlanger.connect(masterDelay.getNode());
+        masterFlanger.connect(masterBitCrush.getNode());
+        masterBitCrush.connect(masterDelay.getNode());
         masterDelay.connect(masterPingPong.getNode());
-        masterPingPong.connect(masterBitCrush.getNode());
-        masterBitCrush.connect(masterReverb.getNode());
+        masterPingPong.connect(masterReverb.getNode());
         masterReverb.connect(masterEQ2.getNode());
         masterEQ2.connect(masterFilter.getNode());
 
@@ -313,6 +313,7 @@ const PolySynth = ({ className, theme }) => {
     // Load Preset
     useLayoutEffect(() => {
         const preset = presetData[currentPreset];
+        synthArr.forEach(synth => synth.noteStop());
 
         setPolyphony(preset.polyphony);
         setMasterVolume(preset.masterVolume);
@@ -738,6 +739,7 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="Delay"
                         value={flangerDelay}
+                        decimalPlaces={5}
                         modifier={0.015}
                         offset={0.005}
                         resetValue={0.01}
@@ -746,6 +748,7 @@ const PolySynth = ({ className, theme }) => {
                     <Knob
                         label="Depth"
                         value={flangerDepth}
+                        decimalPlaces={5}
                         modifier={0.005}
                         onUpdate={(val) => setFlangerDepth(val)}
                     />
