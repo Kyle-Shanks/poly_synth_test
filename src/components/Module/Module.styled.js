@@ -4,21 +4,12 @@ import { SPACING, borderWidthS, borderRadiusM } from 'src/styles/constants';
 
 export const ComponentContainer = styled.div`
     ${relaInline}
+    height: 100%;
+    width: 100%;
     padding: ${SPACING.m};
     border: ${borderWidthS} solid ${({ theme }) => theme.strong};
     border-radius: ${borderRadiusM};
     background-color: ${({ theme }) => theme.background};
-    width: fit-content;
-`;
-
-export const GridContainer = styled.div`
-    display: grid;
-    position: relative;
-    grid-template-rows: ${({ rows }) => `repeat(${rows}, 1fr)`};
-    grid-template-columns: ${({ columns }) => `repeat(${columns}, 1fr)`};
-    gap: ${({ gap }) => gap };
-    align-items: center;
-    justify-items: center;
 `;
 
 export const Label = styled.h4`

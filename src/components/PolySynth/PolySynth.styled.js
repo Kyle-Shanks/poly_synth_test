@@ -1,17 +1,31 @@
 import styled from 'styled-components';
 import { SPACING, borderRadiusM, borderWidthS } from 'src/styles/constants';
+import Module from 'src/components/Module';
+
+const Text = styled.p`
+    margin-bottom: ${SPACING.s};
+`;
+export const PrimaryText = styled(Text)`
+    color: ${({ theme }) => theme.strong};
+`;
+export const SecondaryText = styled(Text)`
+    color: ${({ theme }) => theme.mid};
+`;
+export const PopText = styled(Text)`
+    color: ${({ theme }) => theme.pop};
+`;
 
 export const ModuleGridContainer = styled.div`
     display: grid;
     position: relative;
     width: fit-content;
     // grid-template-columns: repeat(4, 1fr);
-    grid-template-columns: 130px 418px 226px 226px;
-    gap: ${SPACING.ml};
+    grid-template-columns: 130px 418px 226px 226px 130px;
+    gap: ${SPACING.m};
     justify-items: center;
     align-items: center;
     margin: ${SPACING.m} auto;
-    padding: ${SPACING.ml} ${SPACING.l};
+    padding: ${SPACING.ml};
     border: ${borderWidthS} solid ${({ theme }) => theme.strong};
     border-radius: ${borderRadiusM};
     background-color: ${({ theme }) => theme.background};
@@ -20,8 +34,8 @@ export const ModuleGridContainer = styled.div`
         z-index: -1;
         content: '';
         position: absolute;
-        top: 3rem;
-        left: 3rem;
+        top: 3.25rem;
+        left: 3.4rem;
         height: 100%;
         width: 100%;
         overflow: hidden;
@@ -29,7 +43,12 @@ export const ModuleGridContainer = styled.div`
         // Polkadot styles
         background-image: radial-gradient(${({ theme }) => theme.strong} 2px, transparent 2px);
         background-size: 0.75rem 0.75rem;
+        background-position: top;
     }
+`;
+
+export const InfoModule = styled(Module)`
+    grid-row: span 2;
 `;
 
 export const DotCircle = styled.div`
@@ -44,8 +63,9 @@ export const DotCircle = styled.div`
 `;
 
 export const Lines = styled.div`
-    height: 4rem;
-    width: calc(100% - 1rem);
+    height: 3rem;
+    width: 100%;
+    grid-column: span 4;
     overflow: hidden;
     background-image: linear-gradient(90deg, ${({ theme }) => theme.strong} 2px, transparent 2px);
     background-size: 0.75rem 0.75rem;

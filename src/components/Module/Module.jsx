@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ComponentContainer, GridContainer, Bolt, Label } from './Module.styled';
+import { ComponentContainer, Bolt, Label } from './Module.styled';
 
 const BASE_CLASS_NAME = 'Module';
 
@@ -10,34 +10,21 @@ const Module = ({ className, children, columns, gap, label, rows }) => (
         <Bolt />
         <Bolt />
         <Bolt />
-        <Label className={`${BASE_CLASS_NAME}__Label`}>{label}</Label>
-        <GridContainer
-            className={`${BASE_CLASS_NAME}__GridContainer`}
-            columns={columns}
-            rows={rows}
-            gap={gap}
-        >
-            {children}
-        </GridContainer>
+        {label && <Label className={`${BASE_CLASS_NAME}__Label`}>{label}</Label>}
+        {children}
     </ComponentContainer>
 );
 
 Module.propTypes = {
     className: PropTypes.string,
     children: PropTypes.node,
-    label: PropTypes.string.isRequired,
-    // Grid props
-    columns: PropTypes.number,
-    rows: PropTypes.number,
-    gap: PropTypes.string,
+    label: PropTypes.string,
 };
 
 Module.defaultProps = {
     className: '',
     children: null,
-    columns: 1,
-    rows: 1,
-    gap: '0rem',
+    label: '',
 };
 
 export default Module;

@@ -64,8 +64,8 @@ export const FILTER = {
     highpass: 'M 40 22 L 24 22 L 19 16 L 10 34',
     bandpass: 'M 10 34 L 15 34 L 21 16 L 29 16 L 35 34 L 40 34',
     notch: 'M 10 16 L 15 16 L 21 34 L 29 34 L 35 16 L 40 16',
-    // lowshelf: 'M 10 34 L 20 34 L 30 16 L 40 16',
-    // highshelf: 'M 10 16 L 20 16 L 30 34 L 40 34',
+    lowshelf: 'M 10 16 L 20 16 L 30 34 L 40 34',
+    highshelf: 'M 10 34 L 20 34 L 30 16 L 40 16',
 };
 
 export const REVERB = {
