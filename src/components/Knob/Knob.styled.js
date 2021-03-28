@@ -49,9 +49,7 @@ export const KnobContainer = styled.div`
 `;
 
 export const KnobSvg = styled.svg`
-    ${absCenter}
-    height: 5rem;
-    width: 5rem;
+    ${absFill}
     & path {
         fill: none;
         stroke-linecap: round;

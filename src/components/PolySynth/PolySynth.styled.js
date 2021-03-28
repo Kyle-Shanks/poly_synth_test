@@ -4,14 +4,14 @@ import { SPACING, borderRadiusM, borderWidthS } from 'src/styles/constants';
 export const ModuleGridContainer = styled.div`
     display: grid;
     position: relative;
-    width: 64rem;
-    grid-template-columns: repeat(3, 1fr);
-    gap: ${SPACING.l};
+    width: fit-content;
+    // grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 130px 418px 226px 226px;
+    gap: ${SPACING.ml};
     justify-items: center;
-    // align-items: center;
-    align-items: flex-start;
+    align-items: center;
     margin: ${SPACING.m} auto;
-    padding: ${SPACING.l};
+    padding: ${SPACING.ml} ${SPACING.l};
     border: ${borderWidthS} solid ${({ theme }) => theme.strong};
     border-radius: ${borderRadiusM};
     background-color: ${({ theme }) => theme.background};
@@ -32,25 +32,15 @@ export const ModuleGridContainer = styled.div`
     }
 `;
 
-export const ModuleFlexContainer = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    position: relative;
-    width: 64rem;
-    gap: ${SPACING.xl} ${SPACING.l};
-    margin: ${SPACING.m} auto;
-    padding: ${SPACING.l} ${SPACING.xl} ${SPACING.xl} ${SPACING.l};
-    border: ${borderWidthS} solid ${({ theme }) => theme.strong};
-    border-radius: ${borderRadiusM};
-`;
-
 export const DotCircle = styled.div`
-    height: 12rem;
-    width: 12rem;
-    border-radius: 48%;
+    height: 13rem;
+    width: 13rem;
+    grid-row: span 2;
+    border-radius: 49%;
     overflow: hidden;
     background-image: radial-gradient(${({ theme }) => theme.strong} 2px, transparent 2px);
     background-size: 0.75rem 0.75rem;
+    background-position: center;
 `;
 
 export const Lines = styled.div`
@@ -59,4 +49,5 @@ export const Lines = styled.div`
     overflow: hidden;
     background-image: linear-gradient(90deg, ${({ theme }) => theme.strong} 2px, transparent 2px);
     background-size: 0.75rem 0.75rem;
+    background-position: center;
 `;

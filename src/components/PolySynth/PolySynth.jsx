@@ -504,33 +504,7 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
-                <Module label="Delay" columns={4} rows={1}>
-                    <Knob
-                        label="Time"
-                        value={delayTime}
-                        onUpdate={(val) => setDelayTime(val)}
-                    />
-                    <Knob
-                        label="Feedback"
-                        value={delayFeedback}
-                        onUpdate={(val) => setDelayFeedback(val)}
-                    />
-                    <Knob
-                        label="Tone"
-                        value={delayTone}
-                        modifier={11000}
-                        resetValue={4400}
-                        isRounded
-                        onUpdate={(val) => setDelayTone(val)}
-                    />
-                    <Knob
-                        label="Dry/Wet"
-                        value={delayAmount}
-                        onUpdate={(val) => setDelayAmount(val)}
-                    />
-                </Module>
-
-                <Module label="Reverb" columns={2} rows={1}>
+                <Module label="Reverb" columns={1} rows={2}>
                     <Select
                         label="Type"
                         options={REVERB}
@@ -541,23 +515,6 @@ const PolySynth = ({ className, theme }) => {
                         label="Dry/Wet"
                         value={reverbAmount}
                         onUpdate={(val) => setReverbAmount(val)}
-                    />
-                </Module>
-
-                <Module label="Bit Crush" columns={2} rows={1}>
-                    <Knob
-                        label="Bit Depth"
-                        value={bitCrushDepth}
-                        modifier={14}
-                        resetValue={8}
-                        offset={2}
-                        isRounded
-                        onUpdate={(val) => setBitCrushDepth(val)}
-                    />
-                    <Knob
-                        label="Dry/Wet"
-                        value={bitCrushAmount}
-                        onUpdate={(val) => setBitCrushAmount(val)}
                     />
                 </Module>
 
@@ -617,124 +574,56 @@ const PolySynth = ({ className, theme }) => {
                     />
                 </Module>
 
-                <Module label="EQ2" columns={2} rows={1}>
-                    <Knob
-                        label="Low Gain"
-                        type="B"
-                        modifier={24}
-                        value={eqLowGain}
-                        onUpdate={(val) => setEqLowGain(val)}
-                    />
-                    <Knob
-                        label="High Gain"
-                        type="B"
-                        modifier={24}
-                        value={eqHighGain}
-                        onUpdate={(val) => setEqHighGain(val)}
-                    />
-                    <Knob
-                        label="Low Freq"
-                        modifier={640}
-                        resetValue={320}
-                        isRounded
-                        value={eqLowFreq}
-                        onUpdate={(val) => setEqLowFreq(val)}
-                    />
-                    <Knob
-                        label="High Freq"
-                        modifier={8600}
-                        resetValue={3200}
-                        offset={2400}
-                        isRounded
-                        value={eqHighFreq}
-                        onUpdate={(val) => setEqHighFreq(val)}
-                    />
-                </Module>
-
-                <Module label="Ping Pong Delay" columns={2} rows={2}>
+                <Module label="Delay" columns={2} rows={2}>
                     <Knob
                         label="Time"
-                        value={pingPongDelayTime}
-                        onUpdate={(val) => setPingPongDelayTime(val)}
+                        value={delayTime}
+                        onUpdate={(val) => setDelayTime(val)}
                     />
                     <Knob
                         label="Feedback"
-                        value={pingPongFeedback}
-                        onUpdate={(val) => setPingPongFeedback(val)}
+                        value={delayFeedback}
+                        onUpdate={(val) => setDelayFeedback(val)}
                     />
                     <Knob
                         label="Tone"
-                        value={pingPongTone}
+                        value={delayTone}
                         modifier={11000}
                         resetValue={4400}
                         isRounded
-                        onUpdate={(val) => setPingPongTone(val)}
+                        onUpdate={(val) => setDelayTone(val)}
                     />
                     <Knob
                         label="Dry/Wet"
-                        value={pingPongAmount}
-                        onUpdate={(val) => setPingPongAmount(val)}
+                        value={delayAmount}
+                        onUpdate={(val) => setDelayAmount(val)}
                     />
                 </Module>
 
-                <Module label="Master Filter" columns={4} rows={1}>
-                    <Select
-                        label="Type"
-                        options={FILTER}
-                        value={masterFilterType}
-                        onUpdate={(val) => setMasterFilterType(val)}
-                    />
-                    <Knob
-                        label="Cutoff"
-                        value={masterFilterFreq}
-                        modifier={11000}
-                        resetValue={11000}
-                        isRounded
-                        onUpdate={(val) => setMasterFilterFreq(val)}
-                    />
-                    <Knob
-                        label="Q"
-                        value={masterFilterQ}
-                        modifier={20}
-                        onUpdate={(val) => setMasterFilterQ(val)}
-                    />
-                    <Knob
-                        label="Gain"
-                        type="B"
-                        value={masterFilterGain}
-                        modifier={40}
-                        onUpdate={(val) => setMasterFilterGain(val)}
-                    />
+                <Module label="Empty" columns={2} rows={2}>
+                    <Knob label="Test 1" disabled />
+                    <Knob label="Test 2" disabled />
+                    <Knob label="Test 3" disabled />
+                    <Knob label="Test 4" disabled />
                 </Module>
 
-                <Module label="Master" columns={2} rows={2}>
+                <Module label="Crush" columns={1} rows={2}>
                     <Knob
-                        label="Volume"
-                        value={masterVolume}
-                        onUpdate={(val) => setMasterVolume(val)}
-                    />
-                    <Knob
-                        label="Polyphony"
-                        value={polyphony}
-                        modifier={7}
-                        offset={1}
+                        label="Bit Depth"
+                        value={bitCrushDepth}
+                        modifier={14}
                         resetValue={8}
+                        offset={2}
                         isRounded
-                        onUpdate={(val) => {
-                            setPolyphony(val);
-                            resetSynthPos();
-                        }}
+                        onUpdate={(val) => setBitCrushDepth(val)}
                     />
                     <Knob
-                        label="Portamento"
-                        value={portamentoSpeed}
-                        modifier={0.5}
-                        onUpdate={(val) => setPortamentoSpeed(val)}
-                        disabled={polyphony !== 1}
+                        label="Dry/Wet"
+                        value={bitCrushAmount}
+                        onUpdate={(val) => setBitCrushAmount(val)}
                     />
                 </Module>
 
-                <div />
                 <Module label="Flanger" columns={4} rows={2}>
                     <Knob
                         label="Delay"
@@ -769,11 +658,131 @@ const PolySynth = ({ className, theme }) => {
                         onUpdate={(val) => setFlangerAmount(val)}
                     />
                 </Module>
-                <div />
 
-                <Lines />
-                <Lines />
+                <Module label="Ping Pong Delay" columns={2} rows={2}>
+                    <Knob
+                        label="Time"
+                        value={pingPongDelayTime}
+                        onUpdate={(val) => setPingPongDelayTime(val)}
+                    />
+                    <Knob
+                        label="Feedback"
+                        value={pingPongFeedback}
+                        onUpdate={(val) => setPingPongFeedback(val)}
+                    />
+                    <Knob
+                        label="Tone"
+                        value={pingPongTone}
+                        modifier={11000}
+                        resetValue={4400}
+                        isRounded
+                        onUpdate={(val) => setPingPongTone(val)}
+                    />
+                    <Knob
+                        label="Dry/Wet"
+                        value={pingPongAmount}
+                        onUpdate={(val) => setPingPongAmount(val)}
+                    />
+                </Module>
+
+                <Module label="EQ2" columns={2} rows={2}>
+                    <Knob
+                        label="Low Gain"
+                        type="B"
+                        modifier={24}
+                        value={eqLowGain}
+                        onUpdate={(val) => setEqLowGain(val)}
+                    />
+                    <Knob
+                        label="High Gain"
+                        type="B"
+                        modifier={24}
+                        value={eqHighGain}
+                        onUpdate={(val) => setEqHighGain(val)}
+                    />
+                    <Knob
+                        label="Low Freq"
+                        modifier={640}
+                        resetValue={320}
+                        isRounded
+                        value={eqLowFreq}
+                        onUpdate={(val) => setEqLowFreq(val)}
+                    />
+                    <Knob
+                        label="High Freq"
+                        modifier={8600}
+                        resetValue={3200}
+                        offset={2400}
+                        isRounded
+                        value={eqHighFreq}
+                        onUpdate={(val) => setEqHighFreq(val)}
+                    />
+                </Module>
+
+                <Module label="Master" columns={1} rows={1}>
+                    <Knob
+                        label="Volume"
+                        value={masterVolume}
+                        onUpdate={(val) => setMasterVolume(val)}
+                    />
+                </Module>
+
+                <Module label="Master Filter" columns={4} rows={1}>
+                    <Select
+                        label="Type"
+                        options={FILTER}
+                        value={masterFilterType}
+                        onUpdate={(val) => setMasterFilterType(val)}
+                    />
+                    <Knob
+                        label="Cutoff"
+                        value={masterFilterFreq}
+                        modifier={11000}
+                        resetValue={11000}
+                        isRounded
+                        onUpdate={(val) => setMasterFilterFreq(val)}
+                    />
+                    <Knob
+                        label="Q"
+                        value={masterFilterQ}
+                        modifier={20}
+                        onUpdate={(val) => setMasterFilterQ(val)}
+                    />
+                    <Knob
+                        label="Gain"
+                        type="B"
+                        value={masterFilterGain}
+                        modifier={40}
+                        onUpdate={(val) => setMasterFilterGain(val)}
+                    />
+                </Module>
+
+                <Module label="Voicing" columns={2} rows={1}>
+                    <Knob
+                        label="Polyphony"
+                        value={polyphony}
+                        modifier={7}
+                        offset={1}
+                        resetValue={8}
+                        isRounded
+                        onUpdate={(val) => {
+                            setPolyphony(val);
+                            resetSynthPos();
+                        }}
+                    />
+                    <Knob
+                        label="Portamento"
+                        value={portamentoSpeed}
+                        modifier={0.5}
+                        onUpdate={(val) => setPortamentoSpeed(val)}
+                        disabled={polyphony !== 1}
+                    />
+                </Module>
+
                 <DotCircle />
+                <Lines />
+                <Lines />
+                <Lines />
 
             </ModuleGridContainer>
 
