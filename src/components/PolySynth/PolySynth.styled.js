@@ -8,9 +8,6 @@ const Text = styled.p`
 export const PrimaryText = styled(Text)`
     color: ${({ theme }) => theme.strong};
 `;
-export const SecondaryText = styled(Text)`
-    color: ${({ theme }) => theme.mid};
-`;
 export const PopText = styled(Text)`
     color: ${({ theme }) => theme.pop};
 `;
@@ -29,7 +26,7 @@ export const ModuleGridContainer = styled.div`
     gap: ${SPACING.m};
     justify-items: center;
     align-items: center;
-    margin: ${SPACING.m} auto;
+    margin: ${SPACING.ml} auto;
     padding: ${SPACING.ml};
     border: ${borderWidthS} solid ${({ theme }) => theme.strong};
     border-radius: ${borderRadiusM};
@@ -54,15 +51,15 @@ export const ModuleGridContainer = styled.div`
 
 export const InfoModule = styled(Module)`
     grid-row: span 2;
+`;
 
-    & select {
-        display: block;
-        width: 100%;
-        background-color: ${({ theme }) => theme.background};
-        color: ${({ theme }) => theme.strong};
-        border: ${borderWidthS} solid ${({ theme }) => theme.strong};
-        border-radius: ${borderRadiusS};
-    }
+export const InfoSelect = styled.select`
+    display: block;
+    width: 100%;
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.strong};
+    border: ${borderWidthS} solid ${({ theme }) => theme.strong};
+    border-radius: ${borderRadiusS};
 `;
 
 export const InfoContainer = styled.div`

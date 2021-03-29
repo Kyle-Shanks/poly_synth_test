@@ -15,7 +15,9 @@ import {
     ModuleGridContainer,
     InfoModule,
     InfoContainer,
+    InfoSelect,
     PrimaryText,
+    PopText,
     Tag,
     Lines,
 } from './PolySynth.styled';
@@ -62,7 +64,7 @@ const PolySynth = ({ className, setTheme, currentTheme }) => {
     const [gainSustain, setGainSustain] = useState(0.7);
     const [gainRelease, setGainRelease] = useState(0);
     const [filterType, setFilterType] = useState('lowpass');
-    const [filterFreq, setFilterFreq] = useState(6000);
+    const [filterFreq, setFilterFreq] = useState(11000);
     const [filterQ, setFilterQ] = useState(0);
     const [filterGain, setFilterGain] = useState(0);
     const [filterAttack, setFilterAttack] = useState(0);
@@ -456,7 +458,7 @@ const PolySynth = ({ className, setTheme, currentTheme }) => {
                             label="Cutoff"
                             value={filterFreq}
                             modifier={11000}
-                            resetValue={6000}
+                            resetValue={11000}
                             isRounded
                             onUpdate={(val) => setFilterFreq(val)}
                         />
@@ -708,26 +710,37 @@ const PolySynth = ({ className, setTheme, currentTheme }) => {
 
                 <InfoModule>
                     <InfoContainer>
-                        <PrimaryText>- Theme -</PrimaryText>
-                        <select value={currentTheme} onChange={(e) => setTheme(e.target.value)}>
-                            {Object.keys(THEMES).map(theme => (
-                                <option key={`themes_${theme}`} value={theme}>{theme}</option>
-                            ))}
-                        </select>
-                    </InfoContainer>
-                    <InfoContainer>
-                        <PrimaryText>- Preset -</PrimaryText>
-                        <select value={currentPreset} onChange={(e) => setCurrentPreset(e.target.value)}>
+                        <PopText>- Preset -</PopText>
+                        <InfoSelect
+                            value={currentPreset}
+                            onChange={(e) => {
+                                setCurrentPreset(e.target.value);
+                                e.target.blur();
+                            }}
+                        >
                             {Object.keys(presetData).map((preset) => (
                                 <option key={`Preset_${preset}`} value={preset}>{preset}</option>
                             ))}
-                        </select>
+                        </InfoSelect>
+                    </InfoContainer>
+                    <InfoContainer>
+                        <PopText>- Theme -</PopText>
+                        <InfoSelect
+                            value={currentTheme}
+                            onChange={(e) => {
+                                setTheme(e.target.value);
+                                e.target.blur();
+                            }}
+                        >
+                            {Object.keys(THEMES).map(theme => (
+                                <option key={`themes_${theme}`} value={theme}>{theme}</option>
+                            ))}
+                        </InfoSelect>
                     </InfoContainer>
                     <InfoContainer>
                         <PrimaryText>Octave: {octaveMod}</PrimaryText>
                     </InfoContainer>
                     <PeakMeter audioCtx={AC} sourceNode={masterGain} />
-
                     <Tag>- KJ</Tag>
                 </InfoModule>
 
