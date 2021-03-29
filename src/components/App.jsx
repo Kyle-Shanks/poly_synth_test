@@ -10,12 +10,11 @@ const App = (props) => {
     return (
         <ThemeProvider theme={THEMES[theme]}>
             <GlobalStyles />
-            <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-                {Object.keys(THEMES).map(theme => (
-                    <option key={`themes_${theme}`} value={theme}>{theme}</option>
-                ))}
-            </select>
-            <PolySynth theme={THEMES[theme]} />
+            <PolySynth
+                theme={THEMES[theme]}
+                currentTheme={theme}
+                setTheme={setTheme}
+            />
         </ThemeProvider>
     );
 };

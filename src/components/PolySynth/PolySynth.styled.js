@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { SPACING, borderRadiusM, borderWidthS } from 'src/styles/constants';
+import { SPACING, borderRadiusS, borderRadiusM, borderWidthS } from 'src/styles/constants';
 import Module from 'src/components/Module';
 
 const Text = styled.p`
@@ -14,12 +14,17 @@ export const SecondaryText = styled(Text)`
 export const PopText = styled(Text)`
     color: ${({ theme }) => theme.pop};
 `;
+export const Tag = styled.h4`
+    position: absolute;
+    right: ${SPACING.ml};
+    bottom: ${SPACING.ml};
+    color: ${({ theme }) => theme.pop};
+`;
 
 export const ModuleGridContainer = styled.div`
     display: grid;
     position: relative;
     width: fit-content;
-    // grid-template-columns: repeat(4, 1fr);
     grid-template-columns: 130px 418px 226px 226px 130px;
     gap: ${SPACING.m};
     justify-items: center;
@@ -49,6 +54,19 @@ export const ModuleGridContainer = styled.div`
 
 export const InfoModule = styled(Module)`
     grid-row: span 2;
+
+    & select {
+        display: block;
+        width: 100%;
+        background-color: ${({ theme }) => theme.background};
+        color: ${({ theme }) => theme.strong};
+        border: ${borderWidthS} solid ${({ theme }) => theme.strong};
+        border-radius: ${borderRadiusS};
+    }
+`;
+
+export const InfoContainer = styled.div`
+    margin-bottom: ${SPACING.m};
 `;
 
 export const DotCircle = styled.div`

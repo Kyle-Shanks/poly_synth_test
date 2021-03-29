@@ -1,18 +1,22 @@
-import React, { useLayoutEffect, useEffect, useState, useRef } from 'react';
+import React, { useLayoutEffect, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as Nodes from 'src/nodes';
 import MonoSynth from 'src/components/MonoSynth';
-import Module from 'src/components/Module';
 import Knob from 'src/components/Knob';
 import KnobGrid from 'src/components/KnobGrid';
+import Module from 'src/components/Module';
+import PeakMeter from 'src/components/PeakMeter';
 import Select from 'src/components/Select';
 import presetData from 'src/util/presetData';
 import { getNoteInfo, WAVEFORM, FILTER, REVERB } from 'src/util/util';
+import { THEMES } from 'src/styles/themes';
+
 import {
     ModuleGridContainer,
     InfoModule,
+    InfoContainer,
     PrimaryText,
-    PopText,
+    Tag,
     Lines,
 } from './PolySynth.styled';
 
@@ -38,31 +42,7 @@ const masterBitCrush = new Nodes.BitCrusher(AC);
 const masterLimiter = new Nodes.Compressor(AC);
 const masterEQ2 = new Nodes.EQ2(AC);
 
-const analyserNode = AC.createAnalyser();
-analyserNode.fftSize = 2048;
-
-const getNodes = () => ({
-    synths: synthArr,
-    masterGain,
-    masterFilter,
-    masterDistortion,
-    masterFlanger,
-    masterDelay,
-    masterPingPong,
-    masterReverb,
-    vibratoLFO,
-    masterBitCrush,
-    masterLimiter,
-    masterEQ2,
-    polyphony,
-});
-
-window.getNodes = getNodes;
-
-const PolySynth = ({ className, theme }) => {
-    const scopeCtx = useRef();
-    const spectrumCtx = useRef();
-
+const PolySynth = ({ className, setTheme, currentTheme }) => {
     // Synth State
     const [synthActive, setSynthActive] = useState(false);
     const [octaveMod, setOctaveMod] = useState(4);
@@ -149,8 +129,6 @@ const PolySynth = ({ className, theme }) => {
         masterPingPong.connect(masterReverb.getNode());
         masterReverb.connect(masterEQ2.getNode());
         masterEQ2.connect(masterFilter.getNode());
-
-        masterFilter.connect(analyserNode);
         masterFilter.connect(masterLimiter.getNode());
 
         masterLimiter.connect(masterGain.getNode());
@@ -224,7 +202,6 @@ const PolySynth = ({ className, theme }) => {
         switch (e.key) {
             case 'z': return octaveDown();
             case 'x': return octaveUp();
-            // case 'm': return (analyserActive) ? stopAnalyser() : startAnalyser();
         };
 
         // Play note from keyCode
@@ -244,78 +221,8 @@ const PolySynth = ({ className, theme }) => {
         window.removeEventListener('keyup', keyupFunction);
     }
 
-    // Analyser Functions
-    const startAnalyser = () => {
-        const scope = scopeCtx.current.getContext('2d');
-        const spec = spectrumCtx.current.getContext('2d');
-
-        scope.canvas.width = scope.canvas.clientWidth;
-        spec.canvas.width = spec.canvas.clientWidth;
-
-        const draw = () => {
-            drawSpectrum(analyserNode, spec);
-            drawScope(analyserNode, scope);
-            requestAnimationFrame(draw);
-        }
-        draw();
-    }
-    const drawSpectrum = (analyser, ctx) => {
-        const width = ctx.canvas.width;
-        const height = ctx.canvas.height;
-        const freqData = new Uint8Array(analyser.frequencyBinCount);
-        const scaling = height / 260;
-
-        analyser.getByteFrequencyData(freqData);
-
-        ctx.fillStyle = theme.background;
-        ctx.fillRect(0, 0, width, height);
-
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = theme.strong;
-        ctx.beginPath();
-
-        for (let x = 0; x < width; x++) {
-            ctx.lineTo(x, height - freqData[x] * scaling);
-        }
-
-        ctx.stroke();
-    }
-    const drawScope = (analyser, ctx) => {
-        const width = ctx.canvas.width;
-        const height = ctx.canvas.height;
-        const timeData = new Uint8Array(analyser.frequencyBinCount);
-        const scaling = height / 256;
-        let risingEdge = 0;
-        const edgeThreshold = 0.5;
-
-        analyser.getByteTimeDomainData(timeData);
-
-        ctx.fillStyle = theme.background
-        ctx.fillRect(0, 0, width, height);
-
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = theme.strong;
-        ctx.beginPath();
-
-        // No buffer overrun protection
-        while (timeData[risingEdge++] - 128 > 0 && risingEdge <= width);
-        if (risingEdge >= width) risingEdge = 0;
-
-        while (timeData[risingEdge++] - 128 < edgeThreshold && risingEdge <= width);
-        if (risingEdge >= width) risingEdge = 0;
-
-        for (let x = risingEdge; x < timeData.length && x - risingEdge < width; x++) {
-            ctx.lineTo(x - risingEdge, height * 1 - timeData[x] * scaling);
-        }
-
-        ctx.stroke();
-    }
-
     // Init
-    useLayoutEffect(() => {
-        initSynth();
-        // startAnalyser();
-    }, []);
+    useLayoutEffect(initSynth, []);
 
     // Load Preset
     useLayoutEffect(() => {
@@ -436,12 +343,6 @@ const PolySynth = ({ className, theme }) => {
 
     return (
         <div className={`${BASE_CLASS_NAME} ${className}`.trim()}>
-            <select value={currentPreset} onChange={(e) => setCurrentPreset(e.target.value)}>
-                {Object.keys(presetData).map((preset) => (
-                    <option key={`Preset_${preset}`} value={preset}>{preset}</option>
-                ))}
-            </select>
-
             <ModuleGridContainer>
 
                 <Module label="VCO">
@@ -806,22 +707,41 @@ const PolySynth = ({ className, theme }) => {
                 </Module>
 
                 <InfoModule>
-                    <PrimaryText>Octave: {octaveMod}</PrimaryText>
-                    <PopText>- KJ</PopText>
+                    <InfoContainer>
+                        <PrimaryText>- Theme -</PrimaryText>
+                        <select value={currentTheme} onChange={(e) => setTheme(e.target.value)}>
+                            {Object.keys(THEMES).map(theme => (
+                                <option key={`themes_${theme}`} value={theme}>{theme}</option>
+                            ))}
+                        </select>
+                    </InfoContainer>
+                    <InfoContainer>
+                        <PrimaryText>- Preset -</PrimaryText>
+                        <select value={currentPreset} onChange={(e) => setCurrentPreset(e.target.value)}>
+                            {Object.keys(presetData).map((preset) => (
+                                <option key={`Preset_${preset}`} value={preset}>{preset}</option>
+                            ))}
+                        </select>
+                    </InfoContainer>
+                    <InfoContainer>
+                        <PrimaryText>Octave: {octaveMod}</PrimaryText>
+                    </InfoContainer>
+                    <PeakMeter audioCtx={AC} sourceNode={masterGain} />
+
+                    <Tag>- KJ</Tag>
                 </InfoModule>
 
                 <Lines />
 
             </ModuleGridContainer>
-
-            <canvas ref={scopeCtx} id="scope" />
-            <canvas ref={spectrumCtx} id="spectrum" />
         </div>
     );
 };
 
 PolySynth.propTypes = {
     className: PropTypes.string,
+    currentTheme: PropTypes.string.isRequired,
+    setTheme: PropTypes.func.isRequired,
 };
 
 PolySynth.defaultProps = {
