@@ -97,8 +97,18 @@ const PolySynth = ({ className, setTheme, currentTheme }) => {
     const [eqLowFreq, setEqLowFreq] = useState(320);
     const [eqHighFreq, setEqHighFreq] = useState(3200);
 
-    const octaveUp = () => { if (octaveMod < 7) setOctaveMod(octaveMod + 1) };
-    const octaveDown = () => { if (octaveMod > 1) setOctaveMod(octaveMod - 1) };
+    const octaveUp = () => {
+        if (octaveMod < 7) {
+            setOctaveMod(octaveMod + 1);
+            synthArr.forEach(synth => synth.noteStop());
+        }
+    };
+    const octaveDown = () => {
+        if (octaveMod > 1) {
+            setOctaveMod(octaveMod - 1);
+            synthArr.forEach(synth => synth.noteStop());
+        }
+    };
 
     const resetSynthPos = () => synthPos = 0;
     const incrementSynthPos = () => synthPos = (synthPos + 1) % polyphony;
@@ -739,7 +749,7 @@ const PolySynth = ({ className, setTheme, currentTheme }) => {
                         </InfoSelect>
                     </InfoContainer>
                     <InfoContainer>
-                        <PrimaryText>Octave: {octaveMod}</PrimaryText>
+                        <PrimaryText>Octave: {octaveMod}<br/>(z,x)</PrimaryText>
                     </InfoContainer>
                     <PeakMeter audioCtx={AC} sourceNode={masterGain} />
                     <Tag>- KJ</Tag>
