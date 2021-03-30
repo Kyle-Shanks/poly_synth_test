@@ -752,7 +752,7 @@ const PolySynth = ({ className, setTheme, currentTheme }) => {
                         <PrimaryText>Octave: {octaveMod}<br/>(z,x)</PrimaryText>
                     </InfoContainer>
                     <PeakMeter audioCtx={AC} sourceNode={masterGain} />
-                    <Tag>- KJ</Tag>
+                    <Tag href="https://github.com/Kyle-Shanks">- KJ</Tag>
                 </InfoModule>
 
                 <Lines />

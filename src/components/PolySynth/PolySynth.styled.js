@@ -11,11 +11,12 @@ export const PrimaryText = styled(Text)`
 export const PopText = styled(Text)`
     color: ${({ theme }) => theme.pop};
 `;
-export const Tag = styled.h4`
+export const Tag = styled.a`
     position: absolute;
     right: ${SPACING.ml};
     bottom: ${SPACING.ml};
     color: ${({ theme }) => theme.pop};
+    text-decoration: none;
 `;
 
 export const ModuleGridContainer = styled.div`
