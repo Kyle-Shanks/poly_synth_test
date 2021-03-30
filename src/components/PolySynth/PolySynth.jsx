@@ -729,6 +729,7 @@ const PolySynth = ({ className, setTheme, currentTheme }) => {
                             value={currentTheme}
                             onChange={(e) => {
                                 setTheme(e.target.value);
+                                localStorage.setItem('PolySynth-Theme', e.target.value);
                                 e.target.blur();
                             }}
                         >

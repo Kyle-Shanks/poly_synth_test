@@ -298,7 +298,7 @@ export default {
         vcoType: 'sine',
         vcoPan: 0,
         gainAttack: 0,
-        gainDecay: 0.15,
+        gainDecay: 0.08,
         gainSustain: 0,
         gainRelease: 0,
         filterType: 'lowpass',

@@ -2,10 +2,19 @@ import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import PolySynth from 'src/components/PolySynth';
 import { GlobalStyles } from 'src/styles/globalStyles';
-import { THEMES, DARK } from 'src/styles/themes';
+import { THEMES } from 'src/styles/themes';
 
-const App = (props) => {
-    const [theme, setTheme] = useState(DARK);
+const getTheme = () => {
+    const storedTheme = localStorage.getItem('PolySynth-Theme');
+    if (!THEMES[storedTheme]) {
+        localStorage.removeItem('PolySynth-Theme');
+        return 'Dark';
+    }
+    return storedTheme;
+};
+
+const App = () => {
+    const [theme, setTheme] = useState(getTheme());
 
     return (
         <ThemeProvider theme={THEMES[theme]}>
