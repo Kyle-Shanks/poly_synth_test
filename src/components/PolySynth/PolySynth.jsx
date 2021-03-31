@@ -100,13 +100,13 @@ const PolySynth = ({ className, setTheme, currentTheme }) => {
     const octaveUp = () => {
         if (octaveMod < 7) {
             setOctaveMod(octaveMod + 1);
-            synthArr.forEach(synth => synth.noteStop());
+            synthArr.forEach(synth => synthNoteOff(synth));
         }
     };
     const octaveDown = () => {
         if (octaveMod > 1) {
             setOctaveMod(octaveMod - 1);
-            synthArr.forEach(synth => synth.noteStop());
+            synthArr.forEach(synth => synthNoteOff(synth));
         }
     };
 
