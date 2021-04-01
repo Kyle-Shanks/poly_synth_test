@@ -1,23 +1,17 @@
-import Gain from './gain';
-
 const MAX_FREQ = 44100;
 
 class Oscillator {
     constructor(AC) {
         this.AC = AC;
         this.WAVEFORMS = ['sine', 'triangle', 'square', 'sawtooth'];
-
         this.node = this.AC.createOscillator();
-        this.gain = new Gain(this.AC);
-
-        this.node.connect(this.gain.getNode());
     }
 
     connect = (destination) => {
         if (Array.isArray(destination)) {
-            destination.forEach((dest) => this.gain.connect(dest));
+            destination.forEach((dest) => this.node.connect(dest));
         } else {
-            this.gain.connect(destination);
+            this.node.connect(destination);
         }
     }
     start = () => this.node.start();
@@ -39,7 +33,6 @@ class Oscillator {
             : this.node.frequency.setValueAtTime(freq, this.AC.currentTime);
 
     }
-    setGain = (val) => this.gain.setGain(val);
 }
 
 export default Oscillator;

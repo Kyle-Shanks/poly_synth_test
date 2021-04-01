@@ -11,6 +11,8 @@ import BitCrusher from './bitcrusher';
 import Compressor from './compressor';
 import StereoPanner from './stereoPanner';
 import Flanger from './flanger';
+import Source from './source';
+import SignalGenerator from './signalGenerator';
 
 export {
     Compressor,
@@ -26,4 +28,6 @@ export {
     BitCrusher,
     StereoPanner,
     Flanger,
+    Source,
+    SignalGenerator,
 };
